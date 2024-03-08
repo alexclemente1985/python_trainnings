@@ -1,4 +1,5 @@
 # This is a sample Python script.
+from aulas.ferramentas_av import ferramentas_av
 from aulas.funcoes import funcoes
 from aulas.iteracoes import iteracoes
 from aulas.sequencias import sequencias
@@ -11,7 +12,7 @@ from aulas.sequencias import sequencias
 def main():
     # Use a breakpoint in the code line below to debug your script.
     escolha = int(input('Informe a aula do curso: (1) funções | (2) sequências \n'
-                        '\t\t\t\t\t\t(3) iterações\n'))
+                        '\t\t\t\t\t\t(3) iterações | (4) ferramentas avançadas de python\n'))
     match(escolha):
         case 1:
             funcoes()
@@ -19,6 +20,8 @@ def main():
             sequencias()
         case 3:
             iteracoes()
+        case 4:
+            ferramentas_av()
         case other:
             print("Escolha inválida.")
 
