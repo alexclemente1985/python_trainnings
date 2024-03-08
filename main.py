@@ -1,5 +1,6 @@
 # This is a sample Python script.
 from aulas.funcoes import funcoes
+from aulas.iteracoes import iteracoes
 from aulas.sequencias import sequencias
 
 
@@ -9,12 +10,15 @@ from aulas.sequencias import sequencias
 
 def main():
     # Use a breakpoint in the code line below to debug your script.
-    escolha = int(input('Informe a aula do curso: (1) funções | (2) sequências\n'))
+    escolha = int(input('Informe a aula do curso: (1) funções | (2) sequências \n'
+                        '\t\t\t\t\t\t(3) iterações\n'))
     match(escolha):
         case 1:
             funcoes()
         case 2:
             sequencias()
+        case 3:
+            iteracoes()
         case other:
             print("Escolha inválida.")
 

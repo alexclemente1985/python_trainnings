@@ -1,3 +1,8 @@
+def square_info(x):
+    A = x ** 2
+    P = 4 * x
+    print(f"Area and Perimeter: {A,P}")
+
 def lists():
     participants = ['John', 'Leila', 'Gregory', 'Cate']
     print(f'type(participants): {type(participants)}')
@@ -56,6 +61,50 @@ def lists():
     a,b,c = 1,2,3
 
     print(f'Tuplas: {x} e {y}')
+
+    print(f"x[0] = {x[0]}")
+
+    List = [x,y]
+
+    print(f"Lista: {List}")
+
+    #Tuplas: úteis com diferentes valores separados por vírgulas
+
+    (age, year_of_school) = "30,17".split(",")
+    print(f"age: {age}, year: {year_of_school}")
+
+    square_info(3)
+
+    #Dicionários (par chave:valor)
+
+    dict = {'k1': 'cat', 'k2': 'dog', 'k3': 'mouse', 'k4': 'fish'}
+
+    print(f"dicionário: {dict}")
+    print(f"dict[k1]: {dict['k1']}")
+
+    dict['k5'] = 'parrot'
+    print(f"dicionário com adição da chave 'k5': {dict}")
+
+    dict['k2'] = 'squirrel'
+    print(f"dicionário alterado na chave 'k2': {dict}")
+
+    dep_workers = {'dep1': 'Peter', 'dep2': ['Jennifer', 'Michael', 'Tommy']}
+
+    print(f"dep_workers['dep2']: {dep_workers['dep2']}")
+
+    team = {}
+    team['Point Guard'] = 'Dirk'
+    team['Shooting Guard'] = 'Al'
+    team['Small Forward'] = 'Sean'
+    team['Power Forward'] = 'Alexander'
+    team['Center'] = 'Hector'
+
+    print(f'team: {team}')
+    print(f"team['Center']: {team['Center']}")
+
+    #Verifica se a chave existe no dicionário
+    print(f"team.get('Coach'): {team.get('Coach')}")
+    print(f"team.get('Power Forward'): {team.get('Power Forward')}")
 
 
 def sequencias():
