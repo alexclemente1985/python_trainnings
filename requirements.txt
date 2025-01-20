@@ -1,0 +1,4 @@
+pyside6
+mhyt
+pyqt6-tools
+pyinstaller
