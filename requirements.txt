@@ -3,3 +3,7 @@ mhyt
 pyqt6-tools
 pyinstaller
 pytube
+pandas
+numpy
+matplotlib
+statsmodels

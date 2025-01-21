@@ -2,6 +2,9 @@
 
 ## Informações para desenvolvimento QT Designer
 
+### Acesso ao QT Designer do PySide6
+-Na pasta desejada, digitar no terminal: `pyside6-designer`
+
 ### Conversão de arquivo .ui em .py no PySide6
 
 -`pyside6-uic <nome_arquivo>.ui -o <nome_arquivo>.py`
