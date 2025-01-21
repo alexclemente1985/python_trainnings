@@ -23,7 +23,11 @@ from pathlib import Path
 import imgs.Youtube #Youtube_rc
 
 ## ---- Importação da lib para download de vídeos Youtube
-from mhyt import yt_download
+#from mhyt import yt_download
+
+## Correção do problema do mhyt (não consegue baixar mais nada)
+import pytube
+import os
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -74,26 +78,37 @@ class Ui_Dialog(object):
         # Ação do botão de download
         self.pushButton.clicked.connect(self.download)
     # setupUi
-    
+
     ## -- Função de download
     def download(self):
         url = self.txt_link.text()
-        title = self.txt_title.text()
-        
+        #title = self.txt_title.text()
+        yt = pytube.YouTube(url)
+
         if self.radioButton.isChecked() == True:
             try:
-                title_mp3 = title+".mp3"
-                yt_download(url, title_mp3, ismusic=True, codec="mp3")
+                #title_mp3 = title+".mp3"
+                #yt_download(url, title_mp3, ismusic=True, codec="mp3")
+
+                audio = yt.streams.filter(only_audio=True).first()
+                out_file = audio.download()
+
+                #salvando no formato .mp3 (lib pytube sempre salva como .mp4)
+                base, ext = os.path.splitext(out_file)
+                new_file = base + '.mp3'
+                os.rename(out_file, new_file)
             except Exception as error:
                 print(f'Falha no download: ', repr(error))
-        
-        
-        elif self.radioButton_2.isChecked() == True:
-            title_mp4 = title+".mp4"
-            yt_download(url,title_mp4)
 
-        
-        
+
+        elif self.radioButton_2.isChecked() == True:
+            #title_mp4 = title+".mp4"
+            #yt_download(url,title_mp4)
+            video = yt.streams.get_highest_resolution()
+            video.download()
+
+
+
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
