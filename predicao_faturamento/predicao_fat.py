@@ -13,9 +13,13 @@ class Predicao_fat(QMainWindow):
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
+    try:
+        app = QApplication(sys.argv)
 
-    win = Predicao_fat()
-    win.show()
+        win = Predicao_fat()
+        win.show()
 
-    app.exec()
+        app.exec()
+    except Exception as e:
+            print('################### ERRO ######################')
+            print(e)

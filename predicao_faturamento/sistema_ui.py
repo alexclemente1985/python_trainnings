@@ -139,7 +139,45 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         QMetaObject.connectSlotsByName(MainWindow)
+
     # setupUi
+
+    def openfile(self):
+        #Localizando o caminho do arquivo
+        Tk().withdraw()
+        path = askopenfilename(title='Escolha o arquivo csv')
+        self.all_data = pd.read_csv(path)
+
+        #Carregando o arquivo na tabela tb_faturamento
+        numColumns = self.sp_colunas.value()
+
+        if numColumns == 0:
+            numRows = len(self.all_data.index)
+        else:
+            numRows = numColumns
+
+        # Setando o número de linhas e colunas
+        self.tb_faturamento.setColumnCount(len(self.all_data.columns))
+        self.tb_faturamento.setRowCount(numRows)
+
+        # Setando o cabeçalho da tabela
+        self.tb_faturamento.setHorizontalHeaderLabels(self.all_data.columns)
+
+        for i in range(numRows):
+            for j in range(len(self.all_data.columns)):
+                #adicionando informações em cada célula da tabela
+                self.tb_faturamento.setItem(i,j,QTableWidgetItem(str(self.all_data.iat[i,j])))
+
+        #Redimensionando a tabela de maneira correta
+        self.tb_faturamento.resizeColumnToContents()
+        self.tb_faturamento.resizeRowsToContents()
+
+        # Soma do faturamento
+        ## % permite inserir o valor dentro da string, com duas casas decimais
+        soma_faturamento = str('R$%0.02f' %sum(self.all_data['Faturamento']))
+
+        self.txt_tfaturado.setText(soma_faturamento)
+
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
@@ -160,5 +198,8 @@ class Ui_MainWindow(object):
         self.rb_segdados.setText(QCoreApplication.translate("MainWindow", u"Segrega\u00e7\u00e3o de dados", None))
         self.rb_reglin.setText(QCoreApplication.translate("MainWindow", u"Regress\u00e3o Linear", None))
         self.rb_seriestp.setText(QCoreApplication.translate("MainWindow", u"S\u00e9ries Temporais", None))
+
+        self.bt_arquivo.clicked.connect(self.openfile)
+        #self.bt_predicao.clicked.connect(self.predicao)
     # retranslateUi
 
