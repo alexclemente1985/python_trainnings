@@ -140,6 +140,9 @@ class Ui_MainWindow(object):
 
         QMetaObject.connectSlotsByName(MainWindow)
 
+        self.bt_arquivo.clicked.connect(self.openfile)
+        self.bt_predicao.clicked.connect(self.predicao)
+
     # setupUi
 
     def openfile(self):
@@ -169,14 +172,76 @@ class Ui_MainWindow(object):
                 self.tb_faturamento.setItem(i,j,QTableWidgetItem(str(self.all_data.iat[i,j])))
 
         #Redimensionando a tabela de maneira correta
-        self.tb_faturamento.resizeColumnToContents()
-        self.tb_faturamento.resizeRowsToContents()
+        self.tb_faturamento.resizeColumnToContents
+        self.tb_faturamento.resizeRowsToContents
 
         # Soma do faturamento
         ## % permite inserir o valor dentro da string, com duas casas decimais
         soma_faturamento = str('R$%0.02f' %sum(self.all_data['Faturamento']))
 
         self.txt_tfaturado.setText(soma_faturamento)
+
+    def predicao(self):
+        df = self.all_data
+
+        ## Média ##
+        if self.rb_media.isChecked() == True:
+            media = df['Faturamento'].mean()
+            #predicao = 'Nos próximos meses será faturado R$ '+str('%0.02f' %media)+'/mês em média'
+            predicao = f'Nos próximos meses será faturado R$ {str(round(media,2))}/mês em média'
+            self.txt_predicao.setText(predicao)
+
+        ## Desvio Padrão ##
+        elif self.rb_dpadrao.isChecked() == True:
+            media = df['Faturamento'].mean()
+            desvpad = df['Faturamento'].std()
+            coe_var = (desvpad/media)*100
+            
+            predicao = f'Predição de R$ {str(round(media,2))}/mês podendo variar em torno de {str(round(coe_var,2))}%'
+            self.txt_predicao.setText(predicao)
+        
+        ## Média Ponderada ##
+        elif self.rb_mediap.isChecked() == True:
+            lista = np.transpose((np.array([df['Faturamento'].tail(), np.arange(1,6)])))
+            
+            df_ult = pd.DataFrame(lista, columns=['Ultimos','Pesos'])
+
+            df_ult['Ponderado'] = df_ult['Ultimos']*df_ult['Pesos']
+
+            med_pond = df_ult['Ponderado'].sum()/df_ult['Pesos'].sum()
+
+            predicao = f'Predição ponderada de R$ {str(round(med_pond,2))} para os próximos meses.'
+            self.txt_predicao.setText(predicao)
+        
+        ## Segregação de dados ##
+        elif self.rb_segdados.isChecked() == True:
+            df_janeiro = df.loc[df['Mes'] == 1]
+            med_seg = df_janeiro['Faturamento'].mean()
+            predicao = 'Predição segregada de R$ ' + str('%0.02f' %med_seg) + ' para janeiro.'
+            self.txt_predicao.setText(predicao)
+        
+        ## Regressão Linear ##
+        elif self.rb_reglin.isChecked() == True:
+            coefficients = np.polyfit(df.index, df['Faturamento'], 1)
+            a = coefficients[0]
+            b = coefficients[1]
+
+            jan_reta = a * 36 + b
+            predicao = 'Predição por regressão de R$ ' + str('%0.02f' %jan_reta) + ' para janeiro.'
+            self.txt_predicao.setText(predicao)
+        
+        ## Séries Temporais ##
+        elif self.rb_seriestp.isChecked() == True:
+            ### Criação do modelo de regressão linear ###
+            model = AutoReg(df['Faturamento'], lags=1) #old_names só foi utilizado por conta de um aviso da próxima versão
+            ### Treinando o modelo ###
+            model_fit = model.fit()
+            ### Predição dos dados (2 novos valores após o final da lista) ###
+            yhat = model_fit.predict(len(df['Faturamento']), len(df['Faturamento'])+2)
+            pred = np.array(yhat)
+            predicao = 'Predição por serie temporal de R$ ' + str('%0.02f' %pred[0]) + ' para janeiro e R$ ' + str('%0.02f' %pred[1]) + ' para fevereiro.'
+            self.txt_predicao.setText(predicao)
+
 
 
     def retranslateUi(self, MainWindow):
@@ -199,7 +264,5 @@ class Ui_MainWindow(object):
         self.rb_reglin.setText(QCoreApplication.translate("MainWindow", u"Regress\u00e3o Linear", None))
         self.rb_seriestp.setText(QCoreApplication.translate("MainWindow", u"S\u00e9ries Temporais", None))
 
-        self.bt_arquivo.clicked.connect(self.openfile)
-        #self.bt_predicao.clicked.connect(self.predicao)
     # retranslateUi
 
