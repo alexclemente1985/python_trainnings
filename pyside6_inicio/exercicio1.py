@@ -18,8 +18,8 @@ class MainWindow(QMainWindow):
         self.lblHeight.setText("Informe a altura em metros:")
         self.inputHeight = QLineEdit()
 
-        self.btnResult = QPushButton()
-        self.btnResult.setText("Calcular área")
+        self.btnResult = QPushButton("Calcular área")
+        #self.btnResult.setText("Calcular área")
 
         self.lblResult = QLabel()
 
