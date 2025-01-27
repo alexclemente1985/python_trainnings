@@ -17,8 +17,13 @@
 - Remover a importação `import <nome_arquivo_imagem>.rc`
 - Mais informações, seguir instruções do site <https://doc.qt.io/qtforpython-6.5/tutorials/basictutorial/qrcfiles.html>
 
-## Criação do executável
+### Criação do executável
 - Na pasta do arquivo principal (_arquivo único, sem console_): `pyinstaller --onefile --noconsole <nome_arquivo>.py`
+
+## Informações para resolução de exercícios
+
+### Libs atualizadas em relação às mostradas em aula
+- **pycep_correios:** Agora é **brasilcep**; ver pacote em <https://pypi.org/project/brazilcep/>.
 
 ## Informações Úteis
 

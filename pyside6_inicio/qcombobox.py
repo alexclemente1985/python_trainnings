@@ -14,9 +14,24 @@ class MainWindow(QMainWindow):
         self.cb.addItem("item 01")
         self.cb.addItem("item 02")
 
-        self.cb.addItems([f"item 0{i}" for i in range(3,5)])
+        self.cb.addItems([f"item 0{i}" for i in range(3,16)])
+
+        self.cb.currentIndexChanged.connect(self.mudanca_index)
+        self.cb.currentTextChanged.connect(self.mudanca_texto)
+
+        #combobox editável
+        self.cb.setEditable(True)
+
+        # Número de elementos (limita)
+        self.cb.setMaxCount(10)
 
         self.setCentralWidget(self.cb)
+
+    def mudanca_index(self,i):
+        print(i)
+
+    def mudanca_texto(self, t):
+        print(f'Conecta ao banco e traz informações do {t}.')
 
 
 if __name__ == '__main__':
