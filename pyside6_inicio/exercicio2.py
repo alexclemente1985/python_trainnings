@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QLineEdit, QFrame, QVBoxLayout, QLabel, QComboBox
+from PySide6.QtWidgets import QGroupBox,QApplication, QWidget, QMainWindow, QPushButton, QLineEdit, QFrame, QVBoxLayout, QLabel, QComboBox
 import sys
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QPixmap
@@ -37,10 +37,43 @@ class Consulta_CEP(QMainWindow):
 
         # Componentes dependentes do retorno da consulta de CEP
 
-        self.txt_error = QLineEdit()
+        self.lbl_lograd = QLabel("Logradouro:")
+        self.lbl_bairro = QLabel("Bairro:")
+        self.lbl_cidade = QLabel("Cidade:")
+
+        self.txt_error = QLabel()
         self.txt_lograd = QLineEdit()
         self.txt_bairro = QLineEdit()
         self.txt_cidade = QLineEdit()
+
+        # Grupo para resposta positiva
+
+        self.grp_resposta = QGroupBox()
+        self.grp_resposta.setFlat(True)
+
+        self.layout_resp = QVBoxLayout()
+        self.layout_resp.addWidget(self.lbl_lograd)
+        self.layout_resp.addWidget(self.lbl_lograd)
+        self.layout_resp.addWidget(self.txt_lograd)
+        self.layout_resp.addWidget(self.lbl_bairro)
+        self.layout_resp.addWidget(self.txt_bairro)
+        self.layout_resp.addWidget(self.lbl_cidade)
+        self.layout_resp.addWidget(self.txt_cidade)
+
+
+        self.grp_resposta.setLayout(self.layout_resp)
+        self.grp_resposta.setVisible(False)
+
+        #Grupo para retorno com erro ou vazio
+
+        self.grp_error = QGroupBox()
+        self.grp_error.setFlat(True)
+
+        self.layout_resp_error = QVBoxLayout()
+        self.layout_resp_error.addWidget(self.txt_error)
+
+        self.grp_error.setLayout(self.layout_resp_error)
+        self.grp_error.setVisible(False)
 
 
         # Layout e Container
@@ -54,6 +87,9 @@ class Consulta_CEP(QMainWindow):
         self.layout.addWidget(self.lbl_cep)
         self.layout.addWidget(self.led_cep)
 
+        self.layout.addWidget(self.grp_resposta)
+        self.layout.addWidget(self.grp_error)
+
         container = QFrame()
         container.setLayout(self.layout)
 
@@ -63,28 +99,31 @@ class Consulta_CEP(QMainWindow):
         self.setCentralWidget(container)
 
 
-
     def consulta_cep(self):
         try:
             endereco = brazilcep.get_address_from_cep(self.led_cep.text())
 
-            self.lbl_lograd = QLabel("Logradouro:")
             self.txt_lograd.setText(endereco['street'])
-            self.lbl_bairro = QLabel("Bairro:")
             self.txt_bairro.setText(endereco['district'])
-            self.lbl_cidade = QLabel("Cidade:")
             self.txt_cidade.setText(endereco['city'])
 
-            self.layout.addWidget(self.lbl_lograd)
-            self.layout.addWidget(self.txt_lograd)
-            self.layout.addWidget(self.lbl_bairro)
-            self.layout.addWidget(self.txt_bairro)
-            self.layout.addWidget(self.lbl_cidade)
-            self.layout.addWidget(self.txt_cidade)
+            if not self.grp_resposta.isVisible():
+                self.grp_resposta.setVisible(True)
+
+            if self.grp_error.isVisible():
+                self.grp_error.setVisible(False)
 
         # Caso não haja retorno na busca (ou aconteca algum erro)
         except Exception as e:
             print(f"Erro na consulta de CEP ou CEP não encontrado.")
+
+            if self.grp_resposta.isVisible():
+                self.grp_resposta.setVisible(False)
+
+            if not self.grp_error.isVisible():
+                self.grp_error.setVisible(True)
+
+            self.txt_error.setText("Erro na consulta de CEP ou CEP não encontrado.")
 
 
 if __name__ == '__main__':
