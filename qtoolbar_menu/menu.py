@@ -11,7 +11,7 @@ from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QAction, QIcon
 from pathlib import Path
 
-icons = Path.joinpath(Path(__file__).parent,'icons','fugue-icons-3.5.6','icons')
+icons = Path.joinpath(Path(__file__).parents[1],'icons','fugue-icons-3.5.6','icons')
 
 
 class MainWindow(QMainWindow):

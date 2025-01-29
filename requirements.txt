@@ -2,3 +2,4 @@ pyside6
 pyinstaller
 pycep-correios
 brazilcep
+qt-material
