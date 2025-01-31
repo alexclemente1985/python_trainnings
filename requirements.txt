@@ -3,3 +3,4 @@ pyinstaller
 pycep-correios
 brazilcep
 qt-material
+pandas
