@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="imgs">
+    <file>password.png</file>
+    <file>user.png</file>
+  </qresource>
+  <qresource prefix="newPrefix"/>
+</RCC>
