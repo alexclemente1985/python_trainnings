@@ -26,14 +26,14 @@ class Ui_Cad_Emp_Screen(object):
     def setupUi(self, Cad_Emp_Screen):
         if not Cad_Emp_Screen.objectName():
             Cad_Emp_Screen.setObjectName(u"Cad_Emp_Screen")
-        Cad_Emp_Screen.resize(901, 560)
+        Cad_Emp_Screen.resize(899, 639)
         self.centralwidget = QWidget(Cad_Emp_Screen)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout = QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.left_frame = QFrame(self.centralwidget)
         self.left_frame.setObjectName(u"left_frame")
-        self.left_frame.setMaximumSize(QSize(200, 16777215))
+        self.left_frame.setMaximumSize(QSize(0, 16777215))
         self.left_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.left_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_2 = QVBoxLayout(self.left_frame)
@@ -60,30 +60,35 @@ class Ui_Cad_Emp_Screen(object):
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.toolBox = QToolBox(self.buttons_frame)
         self.toolBox.setObjectName(u"toolBox")
+        self.toolBox.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.tbxPage_menu = QWidget()
         self.tbxPage_menu.setObjectName(u"tbxPage_menu")
-        self.tbxPage_menu.setGeometry(QRect(0, 0, 148, 352))
+        self.tbxPage_menu.setGeometry(QRect(0, 0, 113, 416))
         self.verticalLayout_7 = QVBoxLayout(self.tbxPage_menu)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.pushButton = QPushButton(self.tbxPage_menu)
-        self.pushButton.setObjectName(u"pushButton")
+        self.btn_menu_home = QPushButton(self.tbxPage_menu)
+        self.btn_menu_home.setObjectName(u"btn_menu_home")
+        self.btn_menu_home.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
-        self.verticalLayout_7.addWidget(self.pushButton)
+        self.verticalLayout_7.addWidget(self.btn_menu_home)
 
-        self.pushButton_2 = QPushButton(self.tbxPage_menu)
-        self.pushButton_2.setObjectName(u"pushButton_2")
+        self.btn_menu_cadastrar = QPushButton(self.tbxPage_menu)
+        self.btn_menu_cadastrar.setObjectName(u"btn_menu_cadastrar")
+        self.btn_menu_cadastrar.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
-        self.verticalLayout_7.addWidget(self.pushButton_2)
+        self.verticalLayout_7.addWidget(self.btn_menu_cadastrar)
 
-        self.pushButton_3 = QPushButton(self.tbxPage_menu)
-        self.pushButton_3.setObjectName(u"pushButton_3")
+        self.btn_menu_contatos = QPushButton(self.tbxPage_menu)
+        self.btn_menu_contatos.setObjectName(u"btn_menu_contatos")
+        self.btn_menu_contatos.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
-        self.verticalLayout_7.addWidget(self.pushButton_3)
+        self.verticalLayout_7.addWidget(self.btn_menu_contatos)
 
-        self.pushButton_4 = QPushButton(self.tbxPage_menu)
-        self.pushButton_4.setObjectName(u"pushButton_4")
+        self.btn_menu_sobre = QPushButton(self.tbxPage_menu)
+        self.btn_menu_sobre.setObjectName(u"btn_menu_sobre")
+        self.btn_menu_sobre.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
-        self.verticalLayout_7.addWidget(self.pushButton_4)
+        self.verticalLayout_7.addWidget(self.btn_menu_sobre)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -92,13 +97,13 @@ class Ui_Cad_Emp_Screen(object):
         self.toolBox.addItem(self.tbxPage_menu, u"Menu")
         self.tbxPage_info = QWidget()
         self.tbxPage_info.setObjectName(u"tbxPage_info")
-        self.tbxPage_info.setGeometry(QRect(0, 0, 148, 352))
+        self.tbxPage_info.setGeometry(QRect(0, 0, 103, 416))
         self.verticalLayout_6 = QVBoxLayout(self.tbxPage_info)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.label_4 = QLabel(self.tbxPage_info)
-        self.label_4.setObjectName(u"label_4")
+        self.lbl_usuario = QLabel(self.tbxPage_info)
+        self.lbl_usuario.setObjectName(u"lbl_usuario")
 
-        self.verticalLayout_6.addWidget(self.label_4)
+        self.verticalLayout_6.addWidget(self.lbl_usuario)
 
         self.toolBox.addItem(self.tbxPage_info, u"Informa\u00e7\u00f5es")
 
@@ -131,6 +136,7 @@ class Ui_Cad_Emp_Screen(object):
         self.btn_menu.setObjectName(u"btn_menu")
         self.btn_menu.setMinimumSize(QSize(0, 0))
         self.btn_menu.setMaximumSize(QSize(40, 16777215))
+        self.btn_menu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btn_menu.setStyleSheet(u"#btn_menu{\n"
 "	background-color: none;\n"
 "	border: 0;\n"
@@ -160,6 +166,8 @@ class Ui_Cad_Emp_Screen(object):
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.Pages = QStackedWidget(self.main_frame)
         self.Pages.setObjectName(u"Pages")
+        sizePolicy.setHeightForWidth(self.Pages.sizePolicy().hasHeightForWidth())
+        self.Pages.setSizePolicy(sizePolicy)
         self.pg_home = QWidget()
         self.pg_home.setObjectName(u"pg_home")
         self.verticalLayout_5 = QVBoxLayout(self.pg_home)
@@ -178,6 +186,10 @@ class Ui_Cad_Emp_Screen(object):
         self.label_7.setObjectName(u"label_7")
 
         self.verticalLayout_12.addWidget(self.label_7)
+
+        self.verticalSpacer_8 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_12.addItem(self.verticalSpacer_8)
 
         self.frame_3 = QFrame(self.pg_contatos)
         self.frame_3.setObjectName(u"frame_3")
@@ -208,111 +220,139 @@ class Ui_Cad_Emp_Screen(object):
 
         self.verticalLayout_12.addWidget(self.frame_3, 0, Qt.AlignmentFlag.AlignHCenter)
 
+        self.verticalSpacer_7 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_12.addItem(self.verticalSpacer_7)
+
         self.Pages.addWidget(self.pg_contatos)
         self.pg_sobre = QWidget()
         self.pg_sobre.setObjectName(u"pg_sobre")
+        self.verticalLayout_13 = QVBoxLayout(self.pg_sobre)
+        self.verticalLayout_13.setObjectName(u"verticalLayout_13")
         self.label_12 = QLabel(self.pg_sobre)
         self.label_12.setObjectName(u"label_12")
-        self.label_12.setGeometry(QRect(10, 20, 585, 130))
+        sizePolicy.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
+        self.label_12.setSizePolicy(sizePolicy)
+
+        self.verticalLayout_13.addWidget(self.label_12)
+
+        self.verticalSpacer_6 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_13.addItem(self.verticalSpacer_6)
+
         self.label_13 = QLabel(self.pg_sobre)
         self.label_13.setObjectName(u"label_13")
-        self.label_13.setGeometry(QRect(110, 160, 381, 161))
+        sizePolicy.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
+        self.label_13.setSizePolicy(sizePolicy)
+        self.label_13.setMinimumSize(QSize(400, 200))
+        self.label_13.setMaximumSize(QSize(400, 16777215))
         font = QFont()
         font.setPointSize(12)
         self.label_13.setFont(font)
         self.label_13.setWordWrap(True)
+
+        self.verticalLayout_13.addWidget(self.label_13, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_13.addItem(self.verticalSpacer_5)
+
         self.Pages.addWidget(self.pg_sobre)
         self.pg_cadastro = QWidget()
         self.pg_cadastro.setObjectName(u"pg_cadastro")
+        self.verticalLayout_14 = QVBoxLayout(self.pg_cadastro)
+        self.verticalLayout_14.setObjectName(u"verticalLayout_14")
         self.tabWidget = QTabWidget(self.pg_cadastro)
         self.tabWidget.setObjectName(u"tabWidget")
-        self.tabWidget.setGeometry(QRect(0, 20, 611, 361))
+        self.tabWidget.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.tabWidget.setTabPosition(QTabWidget.TabPosition.North)
         self.tabWidget.setElideMode(Qt.TextElideMode.ElideRight)
         self.tab_cadastro = QWidget()
         self.tab_cadastro.setObjectName(u"tab_cadastro")
         self.verticalLayout_8 = QVBoxLayout(self.tab_cadastro)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.label_4 = QLabel(self.tab_cadastro)
+        self.label_4.setObjectName(u"label_4")
+
+        self.verticalLayout_8.addWidget(self.label_4)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_8.addItem(self.verticalSpacer_3)
+
         self.frame = QFrame(self.tab_cadastro)
         self.frame.setObjectName(u"frame")
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout = QGridLayout(self.frame)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.txt_num = QLineEdit(self.frame)
-        self.txt_num.setObjectName(u"txt_num")
-        self.txt_num.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.txt_cnpj = QLineEdit(self.frame)
+        self.txt_cnpj.setObjectName(u"txt_cnpj")
+        self.txt_cnpj.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout.addWidget(self.txt_num, 5, 0, 1, 1)
-
-        self.txt_telefone = QLineEdit(self.frame)
-        self.txt_telefone.setObjectName(u"txt_telefone")
-        self.txt_telefone.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout.addWidget(self.txt_telefone, 7, 0, 1, 1)
-
-        self.txt_municipio = QLineEdit(self.frame)
-        self.txt_municipio.setObjectName(u"txt_municipio")
-        self.txt_municipio.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout.addWidget(self.txt_municipio, 6, 0, 1, 2)
-
-        self.label_5 = QLabel(self.frame)
-        self.label_5.setObjectName(u"label_5")
-
-        self.gridLayout.addWidget(self.label_5, 1, 2, 1, 1)
-
-        self.txt_complemento = QLineEdit(self.frame)
-        self.txt_complemento.setObjectName(u"txt_complemento")
-        self.txt_complemento.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout.addWidget(self.txt_complemento, 5, 1, 1, 2)
-
-        self.txt_bairro = QLineEdit(self.frame)
-        self.txt_bairro.setObjectName(u"txt_bairro")
-        self.txt_bairro.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout.addWidget(self.txt_bairro, 5, 3, 1, 2)
-
-        self.txt_email = QLineEdit(self.frame)
-        self.txt_email.setObjectName(u"txt_email")
-        self.txt_email.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout.addWidget(self.txt_email, 7, 1, 1, 4)
-
-        self.txt_logradouro = QLineEdit(self.frame)
-        self.txt_logradouro.setObjectName(u"txt_logradouro")
-        self.txt_logradouro.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout.addWidget(self.txt_logradouro, 4, 0, 1, 5)
+        self.gridLayout.addWidget(self.txt_cnpj, 0, 0, 1, 3)
 
         self.txt_nome = QLineEdit(self.frame)
         self.txt_nome.setObjectName(u"txt_nome")
         self.txt_nome.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout.addWidget(self.txt_nome, 3, 2, 1, 3)
+        self.gridLayout.addWidget(self.txt_nome, 0, 3, 1, 4)
+
+        self.txt_logradouro = QLineEdit(self.frame)
+        self.txt_logradouro.setObjectName(u"txt_logradouro")
+        self.txt_logradouro.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout.addWidget(self.txt_logradouro, 1, 0, 1, 7)
+
+        self.txt_num = QLineEdit(self.frame)
+        self.txt_num.setObjectName(u"txt_num")
+        self.txt_num.setMaximumSize(QSize(100, 16777215))
+        self.txt_num.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout.addWidget(self.txt_num, 2, 0, 1, 1)
+
+        self.txt_complemento = QLineEdit(self.frame)
+        self.txt_complemento.setObjectName(u"txt_complemento")
+        self.txt_complemento.setMinimumSize(QSize(200, 0))
+        self.txt_complemento.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout.addWidget(self.txt_complemento, 2, 1, 1, 3)
+
+        self.txt_bairro = QLineEdit(self.frame)
+        self.txt_bairro.setObjectName(u"txt_bairro")
+        self.txt_bairro.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout.addWidget(self.txt_bairro, 2, 4, 1, 3)
+
+        self.txt_municipio = QLineEdit(self.frame)
+        self.txt_municipio.setObjectName(u"txt_municipio")
+        self.txt_municipio.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout.addWidget(self.txt_municipio, 3, 0, 1, 5)
 
         self.txt_uf = QLineEdit(self.frame)
         self.txt_uf.setObjectName(u"txt_uf")
         self.txt_uf.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout.addWidget(self.txt_uf, 6, 2, 1, 2)
-
-        self.txt_cnpj = QLineEdit(self.frame)
-        self.txt_cnpj.setObjectName(u"txt_cnpj")
-        self.txt_cnpj.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout.addWidget(self.txt_cnpj, 3, 0, 1, 2)
+        self.gridLayout.addWidget(self.txt_uf, 3, 5, 1, 1)
 
         self.txt_cep = QLineEdit(self.frame)
         self.txt_cep.setObjectName(u"txt_cep")
         self.txt_cep.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout.addWidget(self.txt_cep, 6, 4, 1, 1)
+        self.gridLayout.addWidget(self.txt_cep, 3, 6, 1, 1)
 
-        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.txt_telefone = QLineEdit(self.frame)
+        self.txt_telefone.setObjectName(u"txt_telefone")
+        self.txt_telefone.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout.addItem(self.verticalSpacer_3, 0, 2, 1, 1)
+        self.gridLayout.addWidget(self.txt_telefone, 4, 0, 1, 2)
+
+        self.txt_email = QLineEdit(self.frame)
+        self.txt_email.setObjectName(u"txt_email")
+        self.txt_email.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout.addWidget(self.txt_email, 4, 2, 1, 5)
 
 
         self.verticalLayout_8.addWidget(self.frame)
@@ -323,6 +363,7 @@ class Ui_Cad_Emp_Screen(object):
 
         self.btn_cadastrar = QPushButton(self.tab_cadastro)
         self.btn_cadastrar.setObjectName(u"btn_cadastrar")
+        self.btn_cadastrar.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.verticalLayout_8.addWidget(self.btn_cadastrar, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -375,16 +416,19 @@ class Ui_Cad_Emp_Screen(object):
         self.verticalLayout_9.setObjectName(u"verticalLayout_9")
         self.btn_excel = QPushButton(self.frame_2)
         self.btn_excel.setObjectName(u"btn_excel")
+        self.btn_excel.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.verticalLayout_9.addWidget(self.btn_excel)
 
         self.btn_alterar = QPushButton(self.frame_2)
         self.btn_alterar.setObjectName(u"btn_alterar")
+        self.btn_alterar.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.verticalLayout_9.addWidget(self.btn_alterar)
 
         self.btn_excluir = QPushButton(self.frame_2)
         self.btn_excluir.setObjectName(u"btn_excluir")
+        self.btn_excluir.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.verticalLayout_9.addWidget(self.btn_excluir)
 
@@ -399,6 +443,9 @@ class Ui_Cad_Emp_Screen(object):
         self.verticalLayout_10.addLayout(self.horizontalLayout_5)
 
         self.tabWidget.addTab(self.tab_empresas, "")
+
+        self.verticalLayout_14.addWidget(self.tabWidget)
+
         self.Pages.addWidget(self.pg_cadastro)
 
         self.verticalLayout_4.addWidget(self.Pages)
@@ -428,8 +475,8 @@ class Ui_Cad_Emp_Screen(object):
         self.retranslateUi(Cad_Emp_Screen)
 
         self.toolBox.setCurrentIndex(1)
-        self.Pages.setCurrentIndex(0)
-        self.tabWidget.setCurrentIndex(1)
+        self.Pages.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Cad_Emp_Screen)
@@ -438,12 +485,12 @@ class Ui_Cad_Emp_Screen(object):
     def retranslateUi(self, Cad_Emp_Screen):
         Cad_Emp_Screen.setWindowTitle(QCoreApplication.translate("Cad_Emp_Screen", u"MainWindow", None))
         self.label_2.setText(QCoreApplication.translate("Cad_Emp_Screen", u"<html><head/><body><p align=\"center\"><span style=\" font-size:18pt; font-weight:700;\">LOGO</span></p></body></html>", None))
-        self.pushButton.setText(QCoreApplication.translate("Cad_Emp_Screen", u"Home", None))
-        self.pushButton_2.setText(QCoreApplication.translate("Cad_Emp_Screen", u"Cadastrar", None))
-        self.pushButton_3.setText(QCoreApplication.translate("Cad_Emp_Screen", u"Contatos", None))
-        self.pushButton_4.setText(QCoreApplication.translate("Cad_Emp_Screen", u"Sobre", None))
+        self.btn_menu_home.setText(QCoreApplication.translate("Cad_Emp_Screen", u"Home", None))
+        self.btn_menu_cadastrar.setText(QCoreApplication.translate("Cad_Emp_Screen", u"Cadastrar", None))
+        self.btn_menu_contatos.setText(QCoreApplication.translate("Cad_Emp_Screen", u"Contatos", None))
+        self.btn_menu_sobre.setText(QCoreApplication.translate("Cad_Emp_Screen", u"Sobre", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.tbxPage_menu), QCoreApplication.translate("Cad_Emp_Screen", u"Menu", None))
-        self.label_4.setText(QCoreApplication.translate("Cad_Emp_Screen", u"Usu\u00e1rio: Alex", None))
+        self.lbl_usuario.setText(QCoreApplication.translate("Cad_Emp_Screen", u"Usu\u00e1rio: Alex", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.tbxPage_info), QCoreApplication.translate("Cad_Emp_Screen", u"Informa\u00e7\u00f5es", None))
         self.btn_menu.setText("")
         self.label.setText(QCoreApplication.translate("Cad_Emp_Screen", u"<html><head/><body><p><span style=\" font-size:18pt;\">SISTEMA DE CADASTRO</span></p></body></html>", None))
@@ -455,18 +502,18 @@ class Ui_Cad_Emp_Screen(object):
         self.label_11.setText(QCoreApplication.translate("Cad_Emp_Screen", u"<html><head/><body><p><img src=\":/imgs/youtube.png\"/><span style=\" font-size:18pt; vertical-align:super;\"> youtube</span></p></body></html>", None))
         self.label_12.setText(QCoreApplication.translate("Cad_Emp_Screen", u"<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">SOBRE</span></p></body></html>", None))
         self.label_13.setText(QCoreApplication.translate("Cad_Emp_Screen", u"<html><head/><body><p>Este sistema realiza consulta do CNPJ utilizando a API da Receita Federal, fazendo o cadastro da empresa em um banco de dados SQLite3. </p><p>Possui objetivo did\u00e1tico, com \u00eanfase no ensino do uso do Python e QT para desenvolvimento de aplica\u00e7\u00f5es modernas e funcionais.</p></body></html>", None))
+        self.label_4.setText(QCoreApplication.translate("Cad_Emp_Screen", u"<html><head/><body><p align=\"center\">Empresa</p></body></html>", None))
+        self.txt_cnpj.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"CNPJ", None))
+        self.txt_nome.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"Nome empresarial", None))
+        self.txt_logradouro.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"Logradouro", None))
         self.txt_num.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"N\u00famero", None))
-        self.txt_telefone.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"Telefone", None))
-        self.txt_municipio.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"Munic\u00edpio", None))
-        self.label_5.setText(QCoreApplication.translate("Cad_Emp_Screen", u"TextLabel", None))
         self.txt_complemento.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"Complemento", None))
         self.txt_bairro.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"Bairro", None))
-        self.txt_email.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"Email", None))
-        self.txt_logradouro.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"Logradouro", None))
-        self.txt_nome.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"Nome empresarial", None))
+        self.txt_municipio.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"Munic\u00edpio", None))
         self.txt_uf.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"UF", None))
-        self.txt_cnpj.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"CNPJ", None))
         self.txt_cep.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"CEP", None))
+        self.txt_telefone.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"Telefone", None))
+        self.txt_email.setPlaceholderText(QCoreApplication.translate("Cad_Emp_Screen", u"Email", None))
         self.btn_cadastrar.setText(QCoreApplication.translate("Cad_Emp_Screen", u"Cadastrar", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_cadastro), QCoreApplication.translate("Cad_Emp_Screen", u"Cadastro", None))
         self.title_empresas.setText(QCoreApplication.translate("Cad_Emp_Screen", u"<html><head/><body><p align=\"center\">Empresas</p></body></html>", None))

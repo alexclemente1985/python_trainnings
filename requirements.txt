@@ -4,3 +4,4 @@ pycep-correios
 brazilcep
 qt-material
 pandas
+requests
