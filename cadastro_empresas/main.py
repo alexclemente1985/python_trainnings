@@ -60,10 +60,10 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
     ######
     # Consulta CNPJ API pública (criar message box informando excesso de consulta)
     def consult_api(self):
-        company, status = consulta_cnpj(self.txt_cnpj.text())
-
-        if status == 200:
-            self.campos = company
+        consulta = consulta_cnpj(self.txt_cnpj.text())
+        
+        if (consulta.status_ok) and ('company' in consulta.__dict__.keys()) and (consulta.company != None):
+            self.campos = consulta.company
             self.txt_nome.setText(self.campos.nome)
             self.txt_logradouro.setText(self.campos.logradouro)
             self.txt_num.setText(self.campos.numero)
@@ -75,16 +75,16 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
             self.txt_telefone.setText(self.campos.telefone)
             self.txt_email.setText(self.campos.email)
 
-        elif status == 429:
+        elif ('company' in consulta.__dict__.keys()) and (consulta.company == None):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
-            msg.setText("Número de consultas acima do permitido por minuto (3). Aguarde um instante e tente novamente.")
+            msg.setText("CNPJ não encontrado na base da Receita.")
             msg.exec()
 
         else:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
-            msg.setText("")
+            msg.setText(consulta.message )
             msg.exec()
 
 
