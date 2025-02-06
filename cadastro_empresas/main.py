@@ -9,6 +9,7 @@ import os
 from qt_material import apply_stylesheet
 from functions import *
 from database import Database_cadEmp
+from classes.Company import Company
 
 class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
     def __init__(self):
@@ -19,6 +20,17 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
         iconPath = Path.joinpath(Path(__file__).parent, "imgs", "imagem3.png")
         appIcon = QIcon(iconPath.as_posix())
         self.setWindowIcon(appIcon)
+
+        #######
+        # variável que irá receber os dados da consulta
+        self.fullDataSet: Company = None
+        #######
+
+        #######
+        # Instância do banco de dados
+
+        self.banco = Database_cadEmp()
+        #######
 
         #######
         # Botão MENU
@@ -37,6 +49,12 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
         #######
         # Preenchimento automático dos dados do CNPJ consultado
         self.txt_cnpj.editingFinished.connect(self.consult_api)
+        #######
+
+        #######
+        # Cadastro de empresa
+        self.btn_cadastrar.clicked.connect(self.register_company)
+        #######
 
     ######
     # Animação do menu lateral
@@ -61,39 +79,60 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
     # Consulta CNPJ API pública (criar message box informando excesso de consulta)
     def consult_api(self):
         consulta = consulta_cnpj(self.txt_cnpj.text())
-        
-        if (consulta.status_ok) and ('company' in consulta.__dict__.keys()) and (consulta.company != None):
-            self.campos = consulta.company
-            self.txt_nome.setText(self.campos.nome)
-            self.txt_logradouro.setText(self.campos.logradouro)
-            self.txt_num.setText(self.campos.numero)
-            self.txt_complemento.setText(self.campos.complemento)
-            self.txt_bairro.setText(self.campos.bairro)
-            self.txt_municipio.setText(self.campos.municipio)
-            self.txt_uf.setText(self.campos.uf)
-            self.txt_cep.setText(self.campos.cep)
-            self.txt_telefone.setText(self.campos.telefone)
-            self.txt_email.setText(self.campos.email)
 
+        if (consulta.status_ok) and ('company' in consulta.__dict__.keys()) and (consulta.company != None):
+            self.fullDataSet = consulta.company
+            self.txt_nome.setText(self.fullDataSet.nome)
+            self.txt_logradouro.setText(self.fullDataSet.logradouro)
+            self.txt_num.setText(self.fullDataSet.numero)
+            self.txt_complemento.setText(self.fullDataSet.complemento)
+            self.txt_bairro.setText(self.fullDataSet.bairro)
+            self.txt_municipio.setText(self.fullDataSet.municipio)
+            self.txt_uf.setText(self.fullDataSet.uf)
+            self.txt_cep.setText(self.fullDataSet.cep)
+            self.txt_telefone.setText(self.fullDataSet.telefone)
+            self.txt_email.setText(self.fullDataSet.email)
+
+        ## Alterar para usar função msg()
         elif ('company' in consulta.__dict__.keys()) and (consulta.company == None):
-            msg = QMessageBox()
+            '''msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
             msg.setText("CNPJ não encontrado na base da Receita.")
-            msg.exec()
+            msg.exec()'''
+            self.msg('aviso','CNPJ não encontrado na base da Receita.')
 
         else:
-            msg = QMessageBox()
+            '''msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
             msg.setText(consulta.message )
-            msg.exec()
+            msg.exec()'''
+            self.msg('erro',consulta.message)
 
 
 
     ######
 
-    def register_api(self):
-        pass
+    def register_company(self):
+        result = self.banco.register_company(self.fullDataSet)
+        self.msg(result, None, 'registro')
 
+
+    def msg(self, tipo,msg = None, tipo_funcao = None ):
+        msgbox = QMessageBox()
+
+        if tipo.lower() == 'ok':
+            msgbox.setIcon(QMessageBox.Information)
+            if (tipo_funcao) and (tipo_funcao.lower()) == 'registro':
+                msg = 'Empresa cadastrada com sucesso'
+        elif tipo.lower() == 'erro':
+            msgbox.setIcon(QMessageBox.Critical)
+            if (tipo_funcao) and (tipo_funcao.lower()) == 'registro':
+                msg = 'Falha no cadastro da empresa'
+        elif tipo.lower() == 'aviso':
+            msgbox.setIcon(QMessageBox.Warning)
+
+        msgbox.setText(msg)
+        msgbox.exec()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

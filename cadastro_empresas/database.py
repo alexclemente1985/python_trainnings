@@ -1,12 +1,24 @@
 import sqlite3
 from classes.Company import Company
+from pathlib import Path
 
 class Database_cadEmp:
     def __init__(self, name="system.db") -> None:
         self.name = name
+        self.database = self.create_db_path()
+        self.create_table_company()
+
+
+    def create_db_path(self):
+        database_folder = Path.joinpath(Path(__file__).parent,'data')
+
+        if not database_folder.exists():
+            Path.mkdir(database_folder)
+
+        return Path.joinpath(database_folder, self.name).as_posix()
 
     def connect(self):
-        self.connection =sqlite3.connect(self.name)
+        self.connection =sqlite3.connect(self.database)
 
     def close_connection(self):
         try:
@@ -15,6 +27,7 @@ class Database_cadEmp:
             print(e)
 
     def create_table_company(self):
+        self.connect()
         cursor = self.connection.cursor()
 
         cursor.execute("""
@@ -22,6 +35,7 @@ class Database_cadEmp:
                             CNPJ TEXT,
                             NOME TEXT,
                             NUMERO TEXT,
+                            LOGRADOURO TEXT,
                             COMPLEMENTO TEXT,
                             BAIRRO TEXT,
                             MUNICIPIO TEXT,
@@ -36,7 +50,7 @@ class Database_cadEmp:
         self.close_connection()
 
 
-    def register_company(self, fullDataSet):
+    def register_company(self, fullDataSet: Company):
         campos_tabela = (
             'CNPJ',
             'NOME',
@@ -53,10 +67,28 @@ class Database_cadEmp:
 
         quantidade = ("?,?,?,?,?,?,?,?,?,?,?")
 
-        cursor = self.connection.cursor()
+        values = tuple(
+                        (
+                            fullDataSet.cnpj,
+                            fullDataSet.nome,
+                            fullDataSet.logradouro,
+                            fullDataSet.numero,
+                            fullDataSet.complemento,
+                            fullDataSet.bairro,
+                            fullDataSet.municipio,
+                            fullDataSet.uf,
+                            fullDataSet.cep,
+                            fullDataSet.telefone,
+                            fullDataSet.email
+                        )
+                    )
 
         try:
-            cursor.execute(f"""INSERT INTO Empresas {campos_tabela} VALUES ({quantidade})""", fullDataSet)
+            self.connect()
+
+            cursor = self.connection.cursor()
+            cursor.execute(f"""INSERT INTO Empresas {campos_tabela} VALUES ({quantidade})""", values)
+
             self.connection.commit()
             return "OK"
         except Exception as e:
@@ -93,9 +125,9 @@ class Database_cadEmp:
             self.close_connection()
 
     def update_company(self, fullDataSet: Company):
-        self.connect()
-
         try:
+            self.connect()
+
             cursor = self.connection.cursor()
             cursor.execute(f"""
                                 CNPJ = '{fullDataSet.cnpj}',
