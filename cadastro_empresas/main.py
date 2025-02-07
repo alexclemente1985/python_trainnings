@@ -10,6 +10,7 @@ from qt_material import apply_stylesheet
 from functions import *
 from database import Database_cadEmp
 from classes.Company import Company
+from PySide6.QtSql import QSqlTableModel
 
 class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
     def __init__(self):
@@ -44,6 +45,11 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
         self.btn_menu_contatos.clicked.connect(lambda: self.Pages.setCurrentWidget(self.pg_contatos))
         self.btn_menu_sobre.clicked.connect(lambda: self.Pages.setCurrentWidget(self.pg_sobre))
 
+        #######
+
+        #######
+        # Inicialização da tabela caso já exista
+        self.feed_table()
         #######
 
         #######
@@ -95,39 +101,45 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
 
         ## Alterar para usar função msg()
         elif ('company' in consulta.__dict__.keys()) and (consulta.company == None):
-            '''msg = QMessageBox()
-            msg.setIcon(QMessageBox.Warning)
-            msg.setText("CNPJ não encontrado na base da Receita.")
-            msg.exec()'''
             self.msg('aviso','CNPJ não encontrado na base da Receita.')
 
         else:
-            '''msg = QMessageBox()
-            msg.setIcon(QMessageBox.Critical)
-            msg.setText(consulta.message )
-            msg.exec()'''
             self.msg('erro',consulta.message)
-
 
 
     ######
 
     def register_company(self):
         result = self.banco.register_company(self.fullDataSet)
-        self.msg(result, None, 'registro')
+        self.msg(result.type, result.msg,)
+        self.feed_table()
+
+    def feed_table(self):
+        results = self.banco.select_all_companies()
+        # Limpeza da tabela para evitar concatenações indevidas de dados
+        self.tb_empresas.clearContents()
+
+        if results and (len(results) > 0):
+            self.tb_empresas.setRowCount(len(results))
+
+            # Não é necessário pois já foi feito lá no QT Designer
+            #self.tb_empresas.setColumnCount(len(vars(results[0])))
+
+            for row, company in enumerate(results):
+                for column, data in enumerate(vars(company).values()):
+                    self.tb_empresas.setItem(row,column, QTableWidgetItem(data))
 
 
-    def msg(self, tipo,msg = None, tipo_funcao = None ):
+
+    def msg(self, tipo,msg):
         msgbox = QMessageBox()
 
         if tipo.lower() == 'ok':
             msgbox.setIcon(QMessageBox.Information)
-            if (tipo_funcao) and (tipo_funcao.lower()) == 'registro':
-                msg = 'Empresa cadastrada com sucesso'
+
         elif tipo.lower() == 'erro':
             msgbox.setIcon(QMessageBox.Critical)
-            if (tipo_funcao) and (tipo_funcao.lower()) == 'registro':
-                msg = 'Falha no cadastro da empresa'
+
         elif tipo.lower() == 'aviso':
             msgbox.setIcon(QMessageBox.Warning)
 

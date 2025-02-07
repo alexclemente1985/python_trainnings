@@ -1,5 +1,7 @@
 import sqlite3
+from typing import List
 from classes.Company import Company
+from classes.DbResults import DbResults
 from pathlib import Path
 
 class Database_cadEmp:
@@ -50,7 +52,7 @@ class Database_cadEmp:
         self.close_connection()
 
 
-    def register_company(self, fullDataSet: Company):
+    def register_company(self, fullDataSet: Company) -> DbResults:
         campos_tabela = (
             'CNPJ',
             'NOME',
@@ -90,23 +92,50 @@ class Database_cadEmp:
             cursor.execute(f"""INSERT INTO Empresas {campos_tabela} VALUES ({quantidade})""", values)
 
             self.connection.commit()
-            return "OK"
+            result = DbResults(type="OK", msg="Empresa cadastrada com sucesso!")
+            return result
+        except sqlite3.IntegrityError as e:
+            result = DbResults(type="ERRO", msg="CNPJ já cadastrado!")
+            # Para evitar corrupção dos dados
+            self.connection.rollback()
+            return result
         except Exception as e:
             print(e)
-            return "ERROR"
+            result = DbResults(type="ERRO", msg=f"Falha no processo de cadastro da empresa: {e}")
+            self.connection.rollback()
+            return result
         finally:
             self.close_connection()
 
-    def select_all_companies(self):
+    def select_all_companies(self) -> Company:
         try:
             self.connect()
             cursor = self.connection.cursor()
-            cursor.execute("""SELECT * FROM Empresas ORDER BY NOME""")
+            cursor.execute("""SELECT * FROM Empresas ORDER BY CNPJ""")
 
-            empresas = cursor.fetchall()
-            return empresas
+            comp_result = cursor.fetchall()
+            companies: List[Company] = []
+
+            for company in comp_result:
+                c = Company(
+                    cnpj=company[0],
+                    nome=company[1],
+                    numero=company[2],
+                    logradouro=company[3],
+                    complemento=company[4],
+                    bairro=company[5],
+                    municipio=company[6],
+                    uf=company[7],
+                    cep=company[8],
+                    telefone=company[9],
+                    email=company[10]
+                )
+                companies.append(c)
+            return companies
+
         except Exception as e:
             print(e)
+            return None
         finally:
             self.close_connection()
 
