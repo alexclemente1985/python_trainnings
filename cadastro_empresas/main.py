@@ -1,3 +1,4 @@
+from typing import List
 from PySide6.QtCore import Qt, QSize, QPropertyAnimation, QEasingCurve
 from ui.cad_emp_screen import Ui_Cad_Emp_Screen
 from PySide6.QtWidgets import *
@@ -62,6 +63,10 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
         self.btn_cadastrar.clicked.connect(self.register_company)
         #######
 
+        #######
+        # Alteração de dados de empresa
+        self.btn_alterar.clicked.connect(self.update_company)
+
     ######
     # Animação do menu lateral
     def leftMenu(self):
@@ -111,7 +116,7 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
 
     def register_company(self):
         result = self.banco.register_company(self.fullDataSet)
-        self.msg(result.type, result.msg,)
+        self.msg(result.type, result.msg)
         self.feed_table()
 
     def feed_table(self):
@@ -128,7 +133,38 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
             for row, company in enumerate(results):
                 for column, data in enumerate(vars(company).values()):
                     self.tb_empresas.setItem(row,column, QTableWidgetItem(data))
+    
+    def update_company(self):
+        data = []
+        updated_data: List[Company] = []
+        
 
+        for row in range(self.tb_empresas.rowCount()):
+            for column in range(self.tb_empresas.columnCount()):
+                data.append(self.tb_empresas.item(row, column).text())
+
+            company = Company(
+                cnpj=data[0],
+                nome=data[1],
+                logradouro=data[2],
+                numero=data[3],
+                complemento=data[4],
+                bairro=data[5],
+                municipio=data[6],
+                uf=data[7],
+                cep=data[8],
+                telefone=data[9],
+                email=data[10]
+            )
+            updated_data.append(company)
+            data = []
+
+       
+        result = self.banco.update_company(updated_data)
+        self.msg(result.type, result.msg)
+        self.feed_table()
+
+        
 
 
     def msg(self, tipo,msg):

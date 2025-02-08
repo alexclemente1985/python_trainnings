@@ -153,31 +153,47 @@ class Database_cadEmp:
         finally:
             self.close_connection()
 
-    def update_company(self, fullDataSet: Company):
+    def update_company(self, fullDataSets: List[Company]):
         try:
             self.connect()
 
             cursor = self.connection.cursor()
-            cursor.execute(f"""
-                                CNPJ = '{fullDataSet.cnpj}',
-                                NOME = '{fullDataSet.nome}',
-                                LOGRADOURO = '{fullDataSet.nome}',
-                                NUMERO = '{fullDataSet.numero}',
-                                COMPLEMENTO = '{fullDataSet.complemento}',
-                                BAIRRO = '{fullDataSet.bairro}',
-                                MUNICIPIO = '{fullDataSet.municipio}',
-                                UF = '{fullDataSet.uf}',
-                                CEP = '{fullDataSet.cep}',
-                                TELEFONE = '{fullDataSet.telefone}',
-                                EMAIL = '{fullDataSet.email}'
+            for company in fullDataSets:
+                cursor.execute(f"""
+                                UPDATE Empresas 
+                                
+                                SET                               
+                                CNPJ = '{company.cnpj}',
+                                NOME = '{company.nome}',
+                                LOGRADOURO = '{company.nome}',
+                                NUMERO = '{company.numero}',
+                                COMPLEMENTO = '{company.complemento}',
+                                BAIRRO = '{company.bairro}',
+                                MUNICIPIO = '{company.municipio}',
+                                UF = '{company.uf}',
+                                CEP = '{company.cep}',
+                                TELEFONE = '{company.telefone}',
+                                EMAIL = '{company.email}'
 
-                                WHERE CNPJ = '{fullDataSet.cnpj}'
+                                WHERE CNPJ = '{company.cnpj}'
 
                             """)
 
-            self.connection.commit()
+                self.connection.commit()
+            
+            result = DbResults(type="OK", msg="Empresa(s) atualizada(s) com sucesso!")
+            return result
+        
+        except sqlite3.Error as e:
+            print(e)
+            result = DbResults(type="ERRO", msg=f"Erro na atualização dos dados: {e}")
+            self.connection.rollback()
+            return result
 
         except Exception as e:
             print(e)
+            result = DbResults(type="ERRO", msg=f"Falha no processo de atualização: {e}")
+            self.connection.rollback()
+            return result
         finally:
             self.connection.close()
