@@ -167,12 +167,12 @@ class Database_cadEmp:
             cursor = self.connection.cursor()
             for company in fullDataSets:
                 cursor.execute(f"""
-                                UPDATE Empresas 
-                                
-                                SET                               
+                                UPDATE Empresas
+
+                                SET
                                 CNPJ = '{company.cnpj}',
                                 NOME = '{company.nome}',
-                                LOGRADOURO = '{company.nome}',
+                                LOGRADOURO = '{company.logradouro}',
                                 NUMERO = '{company.numero}',
                                 COMPLEMENTO = '{company.complemento}',
                                 BAIRRO = '{company.bairro}',
@@ -187,10 +187,10 @@ class Database_cadEmp:
                             """)
 
                 self.connection.commit()
-            
+
             result = DbResults(type="OK", msg="Empresa(s) atualizada(s) com sucesso!")
             return result
-        
+
         except sqlite3.Error as e:
             print(e)
             result = DbResults(type="ERRO", msg=f"Erro na atualização dos dados: {e}")
@@ -205,7 +205,7 @@ class Database_cadEmp:
         finally:
             self.connection.close()
 
-    
+
     def excel_report(self):
         try:
             self.connect()
@@ -216,7 +216,7 @@ class Database_cadEmp:
 
             if not reports_path.exists():
                 Path.mkdir(reports_path)
-            
+
             xlsx_path = Path.joinpath(reports_path,"companies.xlsx")
 
             companies.to_excel(xlsx_path, sheet_name="Empresas", index=False)
