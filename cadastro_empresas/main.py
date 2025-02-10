@@ -12,6 +12,7 @@ from functions import *
 from database import Database_cadEmp
 from classes.Company import Company
 from PySide6.QtSql import QSqlTableModel
+import pandas as pd
 
 class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
     def __init__(self):
@@ -66,6 +67,17 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
         #######
         # Alteração de dados de empresa
         self.btn_alterar.clicked.connect(self.update_company)
+        #######
+
+        #######
+        # Exclusão da empresa
+        self.btn_excluir.clicked.connect(self.delete_company)
+        #######
+
+        #######
+        # Geração de relatório
+        self.btn_excel.clicked.connect(self.excel_report)
+        #######
 
     ######
     # Animação do menu lateral
@@ -114,26 +126,17 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
 
     ######
 
+    ######
+    # Registro de empresa
     def register_company(self):
         result = self.banco.register_company(self.fullDataSet)
         self.msg(result.type, result.msg)
         self.feed_table()
-
-    def feed_table(self):
-        results = self.banco.select_all_companies()
-        # Limpeza da tabela para evitar concatenações indevidas de dados
-        self.tb_empresas.clearContents()
-
-        if results and (len(results) > 0):
-            self.tb_empresas.setRowCount(len(results))
-
-            # Não é necessário pois já foi feito lá no QT Designer
-            #self.tb_empresas.setColumnCount(len(vars(results[0])))
-
-            for row, company in enumerate(results):
-                for column, data in enumerate(vars(company).values()):
-                    self.tb_empresas.setItem(row,column, QTableWidgetItem(data))
     
+    ######
+        
+    ######
+    # Atualização de empresas
     def update_company(self):
         data = []
         updated_data: List[Company] = []
@@ -164,9 +167,48 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
         self.msg(result.type, result.msg)
         self.feed_table()
 
-        
+    ######
+    # Remoção de empresas
+    def delete_company(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Excluir")
+        msg.setText("Este registro será excluído.")
+        msg.setInformativeText("Você tem certeza que deseja continuar?")
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
 
+        resp = msg.exec()
 
+        if resp == QMessageBox.Yes:
+            # Capturando valor do cnpj (primeira coluna) do registro selecionado
+            cnpj = self.tb_empresas.selectionModel().currentIndex().siblingAtColumn(0).data()
+            result = self.banco.delete_company(cnpj)
+
+            self.feed_table()
+
+            self.msg(result.type, result.msg)
+    ######
+
+    ######
+    # Alimentação da tabela
+
+    def feed_table(self):
+        results = self.banco.select_all_companies()
+        # Limpeza da tabela para evitar concatenações indevidas de dados
+        self.tb_empresas.clearContents()
+
+        if results and (len(results) > 0):
+            self.tb_empresas.setRowCount(len(results))
+
+            # Não é necessário pois já foi feito lá no QT Designer
+            #self.tb_empresas.setColumnCount(len(vars(results[0])))
+
+            for row, company in enumerate(results):
+                for column, data in enumerate(vars(company).values()):
+                    self.tb_empresas.setItem(row,column, QTableWidgetItem(data))
+    ######
+
+    ######
+    # Exibição de mensagens
     def msg(self, tipo,msg):
         msgbox = QMessageBox()
 
@@ -181,6 +223,17 @@ class MainWindow(QMainWindow, Ui_Cad_Emp_Screen):
 
         msgbox.setText(msg)
         msgbox.exec()
+    
+    ######
+        
+    ######
+    # Geração de relatório Excel
+    def excel_report(self):
+        results = self.banco.excel_report()
+
+        self.msg(results.type, results.msg)
+
+    ######
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

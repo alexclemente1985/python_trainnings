@@ -5,3 +5,4 @@ brazilcep
 qt-material
 pandas
 requests
+openpyxl

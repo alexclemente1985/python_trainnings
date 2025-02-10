@@ -3,6 +3,7 @@ from typing import List
 from classes.Company import Company
 from classes.DbResults import DbResults
 from pathlib import Path
+import pandas as pd
 
 class Database_cadEmp:
     def __init__(self, name="system.db") -> None:
@@ -143,13 +144,19 @@ class Database_cadEmp:
         try:
             self.connect()
             cursor = self.connection.cursor()
-            cursor.execute(f"""DELETE * FROM Empresas WHERE CNPJ == '{cnpj}'""")
+            cursor.execute(f"""DELETE FROM Empresas WHERE CNPJ == '{cnpj}'""")
             self.connection.commit()
 
-            return 'OK'
+            return DbResults(type='OK',msg="Empresa removida com sucesso!")
+        except sqlite3.Error as e:
+            print(e)
+            result = DbResults(type="ERRO", msg=f"Erro na remoção dos dados: {e}")
+            self.connection.rollback()
+            return result
         except Exception as e:
             print(e)
-            return 'ERROR'
+            self.connection.rollback()
+            return DbResults(type='ERRO', msg=f"Falha na remoção do registro da empresa de cnpj {cnpj}.")
         finally:
             self.close_connection()
 
@@ -197,3 +204,24 @@ class Database_cadEmp:
             return result
         finally:
             self.connection.close()
+
+    
+    def excel_report(self):
+        try:
+            self.connect()
+
+            companies = pd.read_sql_query("""SELECT * FROM Empresas""", con = self.connection)
+
+            reports_path = Path.joinpath(Path(__file__).parent, "reports")
+
+            if not reports_path.exists():
+                Path.mkdir(reports_path)
+            
+            xlsx_path = Path.joinpath(reports_path,"companies.xlsx")
+
+            companies.to_excel(xlsx_path, sheet_name="Empresas", index=False)
+
+            return DbResults(type="OK", msg="Relatório gerado com sucesso!")
+        except Exception as e:
+            print(e)
+            return DbResults(type="Erro", msg="Erro na geração do relatório.")
