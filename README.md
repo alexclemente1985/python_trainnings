@@ -53,6 +53,8 @@
 
 ### Instalando libs a partir de requirements.txt:
 `pip install -r requirements.txt`
+`pip3 install -r requirements.txt`
 
 ### Criando arquivo de requirements.txt a partir das libs já instaladas:
 `pip freeze > requirements.txt`
+`pip3 freeze > requirements.txt`

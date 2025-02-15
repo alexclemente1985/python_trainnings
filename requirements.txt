@@ -6,3 +6,6 @@ qt-material
 pandas
 requests
 openpyxl
+pytube
+moviepy
+pip-system-certs
