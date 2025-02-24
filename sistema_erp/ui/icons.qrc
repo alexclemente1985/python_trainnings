@@ -1,0 +1,43 @@
+<RCC>
+  <qresource prefix="logo_empresa">
+    <file>logo_empresa.png</file>
+  </qresource>
+  <qresource prefix="icons_cliente">
+    <file>cancelar.png</file>
+    <file>cadastrar.png</file>
+    <file>pesquisar.png</file>
+    <file>filtro.png</file>
+    <file>retornar.png</file>
+    <file>excluir.png</file>
+    <file>adicionar.png</file>
+    <file>alterar.png</file>
+    <file>consultar.png</file>
+  </qresource>
+  <qresource prefix="icon_sair">
+    <file>sair.png</file>
+  </qresource>
+  <qresource prefix="icon_caixa">
+    <file>caixa.png</file>
+  </qresource>
+  <qresource prefix="icon_banco">
+    <file>banco.png</file>
+  </qresource>
+  <qresource prefix="icon_receber">
+    <file>receber.png</file>
+  </qresource>
+  <qresource prefix="icon_pagar">
+    <file>contasPagar.png</file>
+  </qresource>
+  <qresource prefix="icon_vendas">
+    <file>venda.png</file>
+  </qresource>
+  <qresource prefix="icon_produtos">
+    <file>produtos.png</file>
+  </qresource>
+  <qresource prefix="icon_fornecedor">
+    <file>fornecedor.png</file>
+  </qresource>
+  <qresource prefix="icon_cliente">
+    <file>cliente.png</file>
+  </qresource>
+</RCC>
