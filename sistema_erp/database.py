@@ -12,6 +12,7 @@ class Database_ERP:
         self.create_table()
 
     def connect(self):
+        ## NOTA: caso precise conectar com bases externas, criar um arquivo .py para as variáveis de controle
         self.connection = sqlite3.connect(self.database)
 
     def close_connection(self):
@@ -95,12 +96,12 @@ class Database_ERP:
         finally:
             self.close_connection()
 
-    def select_all_customers(self) -> List[Customer]:
+    def search_customer(self, name: str) -> List[Customer]:
         try:
             self.connect()
 
             cursor = self.connection.cursor()
-            cursor.execute("""SELECT * FROM Customers ORDER BY NAME""")
+            cursor.execute(f"""SELECT * FROM Customers WHERE NAME LIKE '%{name}%' ORDER BY NAME""")
 
             customers_result = cursor.fetchall()
             customers: List[Customer] = []
