@@ -7,6 +7,7 @@ from ui.cliente_form import Ui_Form as Ui_CustomerForm
 from ui.cliente_widget import Ui_Form as Ui_CustomerScreen
 from database import Database_ERP
 from classes.Customer import Customer
+from controlVariables import customerDataScreenType
 
 
 
@@ -69,20 +70,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui_customerForm = Ui_CustomerForm()
         self.ui_customerForm.setupUi(self.customerForm)
 
-        self.ui_customerForm.btn_cliente_cadastrar.clicked.connect(lambda: self.addCustomer(
-            Customer(
-                name=self.ui_customerForm.txt_nome.text(),
-                phone=self.ui_customerForm.txt_telefone.text(),
-                city=self.ui_customerForm.txt_cidade.text()
-            )
-        ))
-
         self.ui_customerForm.btn_cliente_cancelar.clicked.connect(lambda: self.exitScreen(self.customerForm))
+        
+        if customerDataScreenType == 'add':
+            self.ui_customerForm.btn_cliente_cadastrar.clicked.connect(lambda: self.addCustomer(
+                Customer(
+                    name=self.ui_customerForm.txt_nome.text(),
+                    phone=self.ui_customerForm.txt_telefone.text(),
+                    city=self.ui_customerForm.txt_cidade.text()
+                )
+            ))
 
         self.customerForm.show()
 
     # implementar sistema de mensagens
     def addCustomer(self, customer: Customer):
+        customerDataScreenType = 'add'
         result = self.database.register_customer(customer)
         if result.type == 'OK':
             self.exitScreen(self.customerForm)
