@@ -41,8 +41,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui_customerScreen.setupUi(self.customerScreen)
 
         self.ui_customerScreen.btn_cliente_retornar.clicked.connect(lambda: self.exitScreen(self.customerScreen))
-        self.ui_customerScreen.btn_cliente_pesquisar.clicked.connect(lambda: self.searchCustomer(self.ui_customerScreen.txt_cliente_nome.text(), self.ui_customerScreen.tb_cliente))
-        self.ui_customerScreen.btn_cliente_adicionar.clicked.connect(self.customerFormScreen)
+        self.ui_customerScreen.btn_cliente_pesquisar.clicked.connect(lambda: self.searchCustomer(self.ui_customerScreen.txt_cliente_nome.text()))
+        self.ui_customerScreen.btn_cliente_adicionar.clicked.connect(lambda: self.customerFormScreen(formType = 'add'))
+        self.ui_customerScreen.btn_cliente_consultar.clicked.connect(lambda: self.customerFormScreen(formType='consult'))
 
         self.customerScreen.show()
 
@@ -51,46 +52,64 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         screen.close()
 
     ## Busca de clientes por nome (todos se nome não for fornecido)
-    def searchCustomer(self, name: str, table: QTableWidget):
+    def searchCustomer(self, name: str):
         results = self.database.search_customer(name)
-        table.clearContents()
+        self.ui_customerScreen.tb_cliente.clearContents()
 
         if results and (len(results) > 0):
-            table.setRowCount(len(results))
-
+            self.ui_customerScreen.tb_cliente.setRowCount(len(results))
         for row, customer in enumerate(results):
             for column, data in enumerate(vars(customer).values()):
-                table.setItem(row,column, QTableWidgetItem(data))
+                self.ui_customerScreen.tb_cliente.setItem(row,column, QTableWidgetItem(str(data)))
 
-        table.resizeColumnsToContents()
-        table.resizeRowsToContents()
+        self.ui_customerScreen.tb_cliente.resizeColumnsToContents()
+        self.ui_customerScreen.tb_cliente.resizeRowsToContents()
 
-    def customerFormScreen(self):
+    def customerFormScreen(self, formType: str):
         self.customerForm = QWidget()
         self.ui_customerForm = Ui_CustomerForm()
         self.ui_customerForm.setupUi(self.customerForm)
 
         self.ui_customerForm.btn_cliente_cancelar.clicked.connect(lambda: self.exitScreen(self.customerForm))
-        
-        if customerDataScreenType == 'add':
+
+        if formType == 'add':
             self.ui_customerForm.btn_cliente_cadastrar.clicked.connect(lambda: self.addCustomer(
                 Customer(
+                    id_customer= None,
                     name=self.ui_customerForm.txt_nome.text(),
                     phone=self.ui_customerForm.txt_telefone.text(),
                     city=self.ui_customerForm.txt_cidade.text()
                 )
             ))
+        elif formType == 'consult':
+            line = self.ui_customerScreen.tb_cliente.currentRow()
+            id_customer = self.ui_customerScreen.tb_cliente.item(line, 0)
+            name = self.ui_customerScreen.tb_cliente.item(line, 1).text()
+            phone = self.ui_customerScreen.tb_cliente.item(line, 2).text()
+            city = self.ui_customerScreen.tb_cliente.item(line, 3).text()
+
+            self.ui_customerForm.txt_nome.setText(name)
+            self.ui_customerForm.txt_nome.setEnabled(False)
+
+            self.ui_customerForm.txt_telefone.setText(phone)
+            self.ui_customerForm.txt_telefone.setEnabled(False)
+
+            self.ui_customerForm.txt_cidade.setText(city)
+            self.ui_customerForm.txt_cidade.setEnabled(False)
+
+            self.ui_customerForm.btn_cliente_cadastrar.setEnabled(False)
 
         self.customerForm.show()
 
     # implementar sistema de mensagens
     def addCustomer(self, customer: Customer):
-        customerDataScreenType = 'add'
         result = self.database.register_customer(customer)
         if result.type == 'OK':
             self.exitScreen(self.customerForm)
         else:
             print('erro registro (implementar alerta de mensagem)')
+
+
 
 
 if __name__ == "__main__":
