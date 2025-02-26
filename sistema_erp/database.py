@@ -128,7 +128,7 @@ class Database_ERP:
         try:
             self.connect()
             cursor = self.connection.cursor()
-            cursor.execute(f"""DELETE FROM Customers WHERE ID == '{id_customer}'""")
+            cursor.execute(f"""DELETE FROM Customers WHERE ID_CUSTOMER == '{id_customer}'""")
             self.connection.commit()
 
             return DBResults(type='OK', msg='Cliente removido com sucesso!')
@@ -146,14 +146,13 @@ class Database_ERP:
         finally:
             self.close_connection()
 
-    def update_customer(self, customers: List[Customer]):
+    def update_customer(self, customer: Customer):
         try:
             self.connect()
 
             cursor = self.connection.cursor()
 
-            for customer in customers:
-                cursor.execute(f"""
+            cursor.execute(f"""
                                 UPDATE Customers
 
                                 SET
@@ -164,9 +163,9 @@ class Database_ERP:
                                 WHERE ID_CUSTOMER = '{customer.id_customer}'
                                 """)
 
-                self.connection.commit()
+            self.connection.commit()
 
-            result = DBResults(type='OK', msg="Cliente(s) atualizado(s) com sucesso!")
+            result = DBResults(type='OK', msg="Cliente atualizado com sucesso!")
             return result
 
         except sqlite3.Error as e:
@@ -205,5 +204,3 @@ if __name__ == '__main__':
    #customer: Customer = Customer(name="Jonas", phone="21 99226-6455", city="Paris")
 
    #database.register_customer(customer=customer)
-
-   print(database.select_all_customers())

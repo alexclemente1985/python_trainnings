@@ -7,7 +7,6 @@ from ui.cliente_form import Ui_Form as Ui_CustomerForm
 from ui.cliente_widget import Ui_Form as Ui_CustomerScreen
 from database import Database_ERP
 from classes.Customer import Customer
-from controlVariables import customerDataScreenType
 
 
 
@@ -21,13 +20,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         ### Botões sistema
         self.btn_sair.clicked.connect(self.exitSystem)
-        self.btn_cliente.clicked.connect(self.customerScreen)
+        self.btn_cliente.clicked.connect(self.callCustomerScreen)
 
         ## Botões tela cliente
         self.btn_cliente
 
         ### Menu bar ###
-        self.actionCliente.triggered.connect(self.customerScreen)
+        self.actionCliente.triggered.connect(self.callCustomerScreen)
+
 
     ### Funções sistema
     ## Fechar sistema ##
@@ -35,8 +35,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         sys.exit()
 
     ## Abrir tela cliente ##
-    def customerScreen(self):
+    def callCustomerScreen(self):
         self.customerScreen = QWidget()
+
         self.ui_customerScreen = Ui_CustomerScreen()
         self.ui_customerScreen.setupUi(self.customerScreen)
 
@@ -44,8 +45,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui_customerScreen.btn_cliente_pesquisar.clicked.connect(lambda: self.searchCustomer(self.ui_customerScreen.txt_cliente_nome.text()))
         self.ui_customerScreen.btn_cliente_adicionar.clicked.connect(lambda: self.customerFormScreen(formType = 'add'))
         self.ui_customerScreen.btn_cliente_consultar.clicked.connect(lambda: self.customerFormScreen(formType='consult'))
+        self.ui_customerScreen.btn_cliente_alterar.clicked.connect(lambda: self.customerFormScreen(formType='update'))
+        self.ui_customerScreen.btn_cliente_excluir.clicked.connect(self.deleteCustomer)
 
         self.customerScreen.show()
+        self.searchCustomer('')
 
     ## Fechar telas secundárias ##
     def exitScreen(self, screen: QWidget):
@@ -81,34 +85,90 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     city=self.ui_customerForm.txt_cidade.text()
                 )
             ))
-        elif formType == 'consult':
+        elif (formType == 'consult') or (formType =='update'):
             line = self.ui_customerScreen.tb_cliente.currentRow()
-            id_customer = self.ui_customerScreen.tb_cliente.item(line, 0)
+            id_customer = self.ui_customerScreen.tb_cliente.item(line, 0).text()
             name = self.ui_customerScreen.tb_cliente.item(line, 1).text()
             phone = self.ui_customerScreen.tb_cliente.item(line, 2).text()
             city = self.ui_customerScreen.tb_cliente.item(line, 3).text()
 
+            if formType == 'consult':
+                self.ui_customerForm.txt_nome.setEnabled(False)
+                self.ui_customerForm.txt_telefone.setEnabled(False)
+                self.ui_customerForm.txt_cidade.setEnabled(False)
+                self.ui_customerForm.btn_cliente_cadastrar.setEnabled(False)
+
+
             self.ui_customerForm.txt_nome.setText(name)
-            self.ui_customerForm.txt_nome.setEnabled(False)
-
             self.ui_customerForm.txt_telefone.setText(phone)
-            self.ui_customerForm.txt_telefone.setEnabled(False)
-
             self.ui_customerForm.txt_cidade.setText(city)
-            self.ui_customerForm.txt_cidade.setEnabled(False)
 
-            self.ui_customerForm.btn_cliente_cadastrar.setEnabled(False)
+            if formType == 'update':
+                self.ui_customerForm.btn_cliente_cadastrar.clicked.connect(lambda: self.updateCustomer(
+                    Customer(
+                        id_customer= id_customer,
+                        name=self.ui_customerForm.txt_nome.text(),
+                        phone=self.ui_customerForm.txt_telefone.text(),
+                        city=self.ui_customerForm.txt_cidade.text()
+                    )
+            ))
 
         self.customerForm.show()
+
 
     # implementar sistema de mensagens
     def addCustomer(self, customer: Customer):
         result = self.database.register_customer(customer)
         if result.type == 'OK':
             self.exitScreen(self.customerForm)
-        else:
-            print('erro registro (implementar alerta de mensagem)')
+            self.searchCustomer('')
 
+        self.msg(result.type, result.msg)
+
+    def updateCustomer(self, customer: Customer):
+        result = self.database.update_customer(customer)
+
+        if result.type == 'OK':
+            self.exitScreen(self.customerForm)
+            self.searchCustomer('')
+
+        self.msg(result.type, result.msg)
+
+    def deleteCustomer(self):
+
+        line = self.ui_customerScreen.tb_cliente.currentRow()
+        id_customer = self.ui_customerScreen.tb_cliente.item(line, 0).text()
+
+        msg = QMessageBox()
+        msg.setWindowTitle("Excluir")
+        msg.setText("Este registro será excluído.")
+        msg.setInformativeText("Você tem certeza que deseja continuar?")
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+
+        resp = msg.exec()
+
+        if resp == QMessageBox.Yes:
+            result = self.database.delete_customer(id_customer)
+            if result.type == 'OK':
+                self.searchCustomer('')
+                self.msg(result.type, result.msg)
+
+
+        else:
+            print(f'erro na atualização dos dados: {result.msg}')
+
+    def msg(self, type, msg):
+        msgBox = QMessageBox()
+
+        if type.lower() == 'ok':
+            msgBox.setIcon(QMessageBox.Information)
+        elif type.lower() == 'error':
+            msgBox.setIcon(QMessageBox.Critical)
+        elif type.lower() == 'warning':
+            msgBox.setIcon(QMessageBox.Warning)
+
+        msgBox.setText(msg)
+        msgBox.exec()
 
 
 
