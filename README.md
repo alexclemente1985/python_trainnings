@@ -35,11 +35,11 @@ a = Analysis(
     pathex=[],  # Add paths if needed
     binaries=[],
     datas=[],  # Add data files if needed
-    hiddenimports=['PySide6'],  
+    hiddenimports=['PySide6'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=['PyQt5', 'PySide2', 'PyQt6'],  
+    excludes=['PyQt5', 'PySide2', 'PyQt6'],
     noarchive=False,
 )
 
@@ -83,6 +83,11 @@ _Informações obtidas de <https://github.com/KhamisiKibet/24-Modern-Desktop-GUI
 - Uso de PyQT6 junto com PySide6 pode impedir criação do .exe       (remover PyQT6)
   - _Solução: remover PyQT6_ `pip uninstall PyQT6`
 
+#### Criação de executável para rodar no MacOS
+
+- Trocar a extensão do arquivo de `<arquivo.py>` para `<arquivo.command>`
+- No terminal, na pasta de localização de `<arquivo.command>`, tornar o script Python executável com o comando `chmod +x <arquivo.command>`
+- Clicar duas vezes no arquivo e testar a execução do mesmo.
 
 ## Informações Úteis
 
