@@ -17,3 +17,4 @@ shiboken6==6.9.2
 django
 django-cors-headers
 djangorestframework
+django_filters
