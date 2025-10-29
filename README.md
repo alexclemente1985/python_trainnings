@@ -73,3 +73,13 @@
 
 ### Biblioteca Faker (para dados fictícios para testes)
 `pip install faker`
+
+### Documentação do projeto
+`pip install drf-yasg`
+- adicionar o app `drf_yasg` em settings.py -> INSTALLED_APPS
+
+### Acesso à documentação pelo Swagger
+`localhost:<porta>/swagger`
+
+### Acesso à documentação pelo Redoc
+`localhost:<porta>/redoc`
