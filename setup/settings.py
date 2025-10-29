@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ojpci0nay$09r=t+xer*sjdm#jrqbimnu&b*e#9n24h0krzn$l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,10 +40,12 @@ INSTALLED_APPS = [
     'escola',
     'rest_framework',
     'django_filters',
-    'drf_yasg'
+    'drf_yasg',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', #tem que ser o primeiro, pois os demais receberão a resposta dele
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -148,4 +150,9 @@ REST_FRAMEWORK = {
     },
 
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8042",
+    "http://127.0.0.1:8042",
+]
 

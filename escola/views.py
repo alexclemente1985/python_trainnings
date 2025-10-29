@@ -71,6 +71,7 @@ class CursoViewSet(viewsets.ModelViewSet):
 
     #authentication_classes = [BasicAuthentication]
     #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Curso.objects.all().order_by('id')
     serializer_class = CursoSerializer
 
