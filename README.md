@@ -74,6 +74,13 @@
 ### Biblioteca Faker (para dados fictícios para testes)
 `pip install faker`
 
+### Recolocação da SECRET_KEY em arquivo .env
+- adicionar python-dotenv
+`pip install python-dotenv`
+- Criar arquivo `.env` na pasta raiz e criar variável de mesmo nome com valor sem aspas
+- em projeto -> settings.py, ir na variável e substituir o valor por `srt(os.getenv('SECRET_KEY'))` (`os` vem de `import os`)
+- em projeto -> settings.py, chamar a função `load_dotenv()` no início, fazendo `from dotenv import load_dotenv`
+
 ### Documentação do projeto
 `pip install drf-yasg`
 - adicionar o app `drf_yasg` em settings.py -> INSTALLED_APPS
@@ -95,3 +102,25 @@
 ### Testes no server DRF
 #### Verificação com curl
 `curl -u <usuario_API>:<senha_usuario_API> http://localhost:8000/`
+
+### DJANGO
+#### Uso de arquivos estáticos (styles e assets)
+- criar dentro do projeto a pasta `static`
+- criar as pastas `assets` e `styles` e colocar as imagens e estilos css, respectivamente
+- em projeto -> settings.py, inserir as seguintes informações abaixo de `STATIC_URL`:
+
+```
+STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+  os.path.join(BASE_DIR, 'setup/static')
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+```
+
+- Após, rodar o comando `python3 manage.py collectstatic` para o Django poder encontrar os arquivos corretamente
+
+#### Atualização do template para uso dos arquivos estáticos
+- Após sequência anterior, adicionar o código `{% load static %}` na primeira linha do arquivo .html de template
+- Em cada referência a um arquivo estático, ao longo do html, deve-se usar `{% static '<caminho_arquivo_estático>' %}` para fazer os carregamentos na tela.
