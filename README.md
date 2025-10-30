@@ -124,3 +124,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 #### Atualização do template para uso dos arquivos estáticos
 - Após sequência anterior, adicionar o código `{% load static %}` na primeira linha do arquivo .html de template
 - Em cada referência a um arquivo estático, ao longo do html, deve-se usar `{% static '<caminho_arquivo_estático>' %}` para fazer os carregamentos na tela.
+
+#### Atualização de arquivos de app
+- Em `INSTALLED_APPS`, colocar como app a função presente em `<app> -> apps.py -> <APP>Config`
+`<nome_app>.apps.<nome_app>Config`
+- Isto permitirá atualizações de todos os arquivos e configurações do app
+
+#### Uso de ImageField em models
+- necessário importa lib `Pillow`
+`pip install Pillow`
