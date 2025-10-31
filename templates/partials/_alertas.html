@@ -1,0 +1,7 @@
+{% if messages %}
+    {% for message in messages %}
+    {% comment %} message vem de setup->settings.py-> django.contrib.messages import constants as messages {% endcomment %}
+        <p class="alert alert-{{message.tags}}" id='messages'>{{message}}</p>
+    {% endfor %}
+{% endif %}
+    

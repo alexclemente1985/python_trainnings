@@ -1,10 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from galeria.models import Fotografia
 
 # Create your views here.
 
 def index(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
 
     # fotografias = Fotografia.objects.all()
     fotografias = Fotografia.objects.order_by("data_fotografia").filter(publicada=True) # para inverter a ordem -> "-data_fotografia"
@@ -16,4 +18,12 @@ def imagem(request, foto_id):
         return render(request, 'galeria/imagem.html', {"fotografia":fotografia})
 
 def buscar(request):
-      return render (request, 'galeria/buscar.html')
+    fotografias = Fotografia.objects.order_by("data_fotografia").filter(publicada=True)
+
+    if "buscar" in request.GET:
+        nome_a_buscar = request.GET['buscar']
+
+        if nome_a_buscar:
+             fotografias = fotografias.filter(nome__icontains=nome_a_buscar)
+
+    return render (request, 'galeria/buscar.html', {"cards": fotografias})

@@ -5,7 +5,7 @@ from .models import Fotografia
 class FotografiasAdmin(admin.ModelAdmin):
     list_display = ['id', 'nome', 'legenda','categoria', 'descricao', 'foto', 'publicada', 'data_fotografia']
     search_fields = ['nome', 'categoria']
-    list_filter = ['nome', 'categoria', 'publicada']
+    list_filter = ['nome', 'categoria', 'publicada', 'usuario']
     list_display_links = ("id","nome")
     # paginação
     list_per_page = 1
