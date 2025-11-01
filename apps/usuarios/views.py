@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth, messages
 
-from usuarios.forms import CadastroForms, LoginForms
+from apps.usuarios.forms import CadastroForms, LoginForms
+
 
 # Create your views here.
 def login(request):

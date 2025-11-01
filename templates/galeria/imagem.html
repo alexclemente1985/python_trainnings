@@ -1,16 +1,7 @@
-{% extends 'galeria/base.html' %}
+{% extends 'shared/base.html' %}
 {% load static %}
 {% block content %}
 
-        <main class="principal">
-            <section class="menu-lateral">
-                <nav class="menu-lateral__navegacao">
-                    <a href="{% url 'index'%}"><img src="{% static '/assets/ícones/1x/Home - ativo.png'%}"> Home</a>
-                    <a href="#"><img src="{% static '/assets/ícones/1x/Mais vistas - inativo.png'%}"> Mais vistas</a>
-                    <a href="#"><img src="{% static '/assets/ícones/1x/Novas - inativo.png'%}"> Novas</a>
-                    <a href="{% url 'logout' %}"><img src="{% static '/assets/ícones/1x/Surpreenda-me - inativo.png'%}"> Logout</a>
-                </nav>
-            </section>
             <section class="conteudo">
                 <section class="imagem">
                     <div class="imagem__conteudo">
@@ -25,11 +16,14 @@
                                 <p class="imagem__descricao">{{fotografia.legenda}}</p>
                                 <p class="imagem__texto">{{fotografia.descricao}}</p>
                             </div>
+                            <div>
+                                <a href="{% url 'editar_imagem' fotografia.id %}"><button class="btn btn-success col-12" style="padding: top 5px;">Editar</button></a>
+                                <a href="{% url 'deletar_imagem' fotografia.id %}"><button class="btn btn-danger col-12" style="padding: top 5px;">Deletar</button></a>
+                            </div>
                         </div>
                     </div>
+
                 </section>
             </section>
-        </main>
-    </div>
    
 {% endblock %}
