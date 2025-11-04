@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div class="row">
+                    <div class="col-sm">
+                        Uma de 3 colunas
+                    </div>
+                    <div class="col-sm">
+                        
+                        Olá {{ usuario.funcionario.nome }}
+                        <a href="{% url 'list_funcionarios' %}">Gerenciar Funcionários</a>
+                    </div>
+                    <div class="col-sm">
+                        {% if usuario.funcionario.empresa %}
+                            <a href="{% url 'edit_empresa' usuario.funcionario.empresa.id%}">Editar Empresa</a>
+                        {% else %}
+                            <a href="{% url 'create_empresa' %}">Criar Empresa</a>
+                        {% endif %}
+                    </div>
+                    <form action="{% url 'logout'%}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>               
+                
+{% endblock main %}
+    
