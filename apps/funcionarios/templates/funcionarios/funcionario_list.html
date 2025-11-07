@@ -8,5 +8,6 @@
         <li><a href="{% url 'update_funcionario' funcionario.id %}">{{funcionario}}</a> <a href="{% url 'delete_funcionario' funcionario.id%}">Apagar Funcionário</a></li>
     {% endfor %}
     </ul>
+    <a href="{% url 'create_funcionario' %}" class="btn btn-info">Novo</a>
 {% endblock main %}
     

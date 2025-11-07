@@ -133,3 +133,19 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 #### Apps CORE
 - Usado para centralizar chamadas padrão
 - Recomendação: usar a seguinte estrutura para templates do core `apps -> core -> templates -> core -> <NOME_TEMPLATE>.html`
+
+#### Django e Bootstrap
+- Em caso de problemas com módulo `distutils` (removido após python v3.12): `pip install --upgrade setuptools`
+
+#### Django e arquivos estáticos
+- o Django, no modo produção (`DEBUG = False` em `settings.py`), não provê os arquivos estáticos (como arquivos css e js)
+- Para que possa prover, é necessário ou configurar um Ngnix para serví-los ou rodar o comando `python3 manage.py runserver --insecure` (indicado apenas para hospedagem local)
+- **NOTA**: mesmo com a configuração `--insecure`, arquivos de mídia (_imagens, etc._) **NÃO** serão servidos pelo Django, devendo-se realizar uma configuração a parte no Ngnix ou Apache.
+- **NOTA 2:** é uma boa prática criar pastas `static/<nome_app>` em cada pasta de app no caso de existirem arquivos estáticos particulares, pois o Django varre toda a aplicação procurando pastas `static` e, com o comando `collectstatic`, irá organizar tudo na pasta definida em `STATIC_ROOT`.
+
+
+
+
+
+http://localhost:8000/media/documentos/Modal.png
+http://localhost:8000/media/documentos/carina-nebula.png

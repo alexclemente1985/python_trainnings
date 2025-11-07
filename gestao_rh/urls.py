@@ -16,12 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('apps.core.urls')),
     path('admin/', admin.site.urls),
     path('funcionarios/', include('apps.funcionarios.urls')),
-     path('empresas/', include('apps.empresas.urls')),
-    path('accounts/',include('django.contrib.auth.urls')) #implementação de tela de login usando recursos django. Depende de criar pasta registration e arquivo login.html
-    
-]
+    path('departamentos/', include('apps.departamentos.urls')),
+    path('empresas/', include('apps.empresas.urls')),
+    path('documento/', include('apps.documentos.urls')),
+    path('horas-extras/', include('apps.registro_hora_extra.urls')),
+    path('accounts/',include('django.contrib.auth.urls')) #implementação de tela de login usando recursos django. Depende de criar pasta registration e arquivo login.html   
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #recurso necessário para visualização de arquivos estáticos no django
