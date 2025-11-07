@@ -143,9 +143,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 - **NOTA**: mesmo com a configuração `--insecure`, arquivos de mídia (_imagens, etc._) **NÃO** serão servidos pelo Django, devendo-se realizar uma configuração a parte no Ngnix ou Apache.
 - **NOTA 2:** é uma boa prática criar pastas `static/<nome_app>` em cada pasta de app no caso de existirem arquivos estáticos particulares, pois o Django varre toda a aplicação procurando pastas `static` e, com o comando `collectstatic`, irá organizar tudo na pasta definida em `STATIC_ROOT`.
 
-
-
-
-
-http://localhost:8000/media/documentos/Modal.png
-http://localhost:8000/media/documentos/carina-nebula.png
