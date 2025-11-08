@@ -143,3 +143,90 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 - **NOTA**: mesmo com a configuração `--insecure`, arquivos de mídia (_imagens, etc._) **NÃO** serão servidos pelo Django, devendo-se realizar uma configuração a parte no Ngnix ou Apache.
 - **NOTA 2:** é uma boa prática criar pastas `static/<nome_app>` em cada pasta de app no caso de existirem arquivos estáticos particulares, pois o Django varre toda a aplicação procurando pastas `static` e, com o comando `collectstatic`, irá organizar tudo na pasta definida em `STATIC_ROOT`.
 
+
+#### Django e uWSGI
+- Em produção, tem que usar o uWSGI (ou aWSGI) no lugar do server padrão de desenvolvimento
+1. Criar venv na pasta do projeto no server de produção
+`python3 -m venv .venv`
+2. Ativar venv
+`source .venv/bin/activate`
+3. Instalar o uWSGI
+`pip install uwsgi`
+4. Executar o comando para rodar o projeto no uwsgi:
+`uwsgi --http :8000 --module <NOME_PROJETO>.wsgi`
+
+#### Django, uWSGI e NGnix
+- Webserver para conexão do browser com o uWSGI
+1. Instalar o NGnix no server
+`sudo apt-get install nginx`
+2. Criar o arquivo uwsgi_params dentro da pasta do projeto criado (neste caso, gestao_rh), no server (usar nano ou vim), e colar o seguinte conteúdo:
+```
+
+uwsgi_param  QUERY_STRING       $query_string;
+uwsgi_param  REQUEST_METHOD     $request_method;
+uwsgi_param  CONTENT_TYPE       $content_type;
+uwsgi_param  CONTENT_LENGTH     $content_length;
+
+uwsgi_param  REQUEST_URI        $request_uri;
+uwsgi_param  PATH_INFO          $document_uri;
+uwsgi_param  DOCUMENT_ROOT      $document_root;
+uwsgi_param  SERVER_PROTOCOL    $server_protocol;
+uwsgi_param  REQUEST_SCHEME     $scheme;
+uwsgi_param  HTTPS              $https if_not_empty;
+
+uwsgi_param  REMOTE_ADDR        $remote_addr;
+uwsgi_param  REMOTE_PORT        $remote_port;
+uwsgi_param  SERVER_PORT        $server_port;
+uwsgi_param  SERVER_NAME        $server_name;
+```
+
+3. Ir na pasta do nginx `sites-available` e criar o arquivo `<nome_projeto>.conf`
+`cd /etc/nginx/sites-available/`
+
+4. Salvar o seguinte conteúdo no arquivo de configuração (mudar caminhos de media, static e include do location para o caminho da pasta do projeto django -> executar comando `pwd` no interior da pasta e copiar caminho)
+
+```
+# the upstream component nginx needs to connect to
+upstream django {
+    #server unix:///home/ubuntu/gestao_rh/mysite.sock; # for a file socket
+    server 127.0.0.1:8001; # for a web port socket (we'll use this first)
+}
+
+# configuration of the server
+server {
+    # the port your site will be served on
+    listen      8000;
+    # the domain name it will serve for
+    server_name [IP DO SERVER]; # substitute your machine's IP address or FQDN
+    charset     utf-8;
+
+    # max upload size
+    client_max_body_size 75M;   # adjust to taste
+
+    # Django media
+    location /media  {
+        alias /CAMINHO/DO/PROJETO/DJANGO/media;  # your Django project's media files - amend as required
+    }
+
+    location /static {
+        alias /CAMINHO/DO/PROJETO/DJANGO/static; # your Django project's static files - amend as required
+    }
+
+    # Finally, send all non-media requests to the Django server.
+    location / {
+        uwsgi_pass  django;
+        include     /CAMINHO/DO/PROJETO/DJANGO/uwsgi_params; # the uwsgi_params file you installed
+    }
+}
+```
+
+5. Criar link simbólico para o arquivo `.conf`, dentro da pasta `sites-enabled` de `/etc/nginx`
+`sudo ln -s /etc/nginx/sites-available/<NOME_PROJETO>.conf`
+
+6. Verificar se o link simbólico foi criado executando o seguinte comando na pasta `sites-enabled` (verificar aparecimento do nome do arquivo na cor azulada ou em outra que não seja vermelha):
+`ls -la`
+
+7. Adicionar a configuração do STATIC_ROOT para ao projeto, caso não tenha ainda feito
+```
+STATIC_ROOT = os.path.join(BASE_DIR, 'static') 
+```
