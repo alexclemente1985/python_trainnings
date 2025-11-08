@@ -147,18 +147,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 #### Django e uWSGI
 - Em produção, tem que usar o uWSGI (ou aWSGI) no lugar do server padrão de desenvolvimento
 1. Criar venv na pasta do projeto no server de produção
-`python3 -m venv .venv`
+- `python3 -m venv .venv`
 2. Ativar venv
-`source .venv/bin/activate`
+- `source .venv/bin/activate`
 3. Instalar o uWSGI
-`pip install uwsgi`
+- `pip install uwsgi`
 4. Executar o comando para rodar o projeto no uwsgi:
-`uwsgi --http :8000 --module <NOME_PROJETO>.wsgi`
+- `uwsgi --http :8000 --module <NOME_PROJETO>.wsgi`
 
 #### Django, uWSGI e NGnix
 - Webserver para conexão do browser com o uWSGI
 1. Instalar o NGnix no server
-`sudo apt-get install nginx`
+- `sudo apt-get install nginx`
 2. Criar o arquivo uwsgi_params dentro da pasta do projeto criado (neste caso, gestao_rh), no server (usar nano ou vim), e colar o seguinte conteúdo:
 ```
 
@@ -181,7 +181,7 @@ uwsgi_param  SERVER_NAME        $server_name;
 ```
 
 3. Ir na pasta do nginx `sites-available` e criar o arquivo `<nome_projeto>.conf`
-`cd /etc/nginx/sites-available/`
+- `cd /etc/nginx/sites-available/`
 
 4. Salvar o seguinte conteúdo no arquivo de configuração (mudar caminhos de media, static e include do location para o caminho da pasta do projeto django -> executar comando `pwd` no interior da pasta e copiar caminho)
 
@@ -221,12 +221,22 @@ server {
 ```
 
 5. Criar link simbólico para o arquivo `.conf`, dentro da pasta `sites-enabled` de `/etc/nginx`
-`sudo ln -s /etc/nginx/sites-available/<NOME_PROJETO>.conf`
+- `sudo ln -s /etc/nginx/sites-available/<NOME_PROJETO>.conf`
 
 6. Verificar se o link simbólico foi criado executando o seguinte comando na pasta `sites-enabled` (verificar aparecimento do nome do arquivo na cor azulada ou em outra que não seja vermelha):
-`ls -la`
+- `ls -la`
 
 7. Adicionar a configuração do STATIC_ROOT para ao projeto, caso não tenha ainda feito
 ```
 STATIC_ROOT = os.path.join(BASE_DIR, 'static') 
 ```
+
+8. Executar o comando para coleta de arquivos estáticos na pasta da aplicação
+- `python3 manage.py collectstatic`
+
+9. Reiniciar o NGnix no server
+- `sudo /etc/init.d/nginx restart`
+
+10. Usando Unix Sockets
+- Torna o acesso do Ngnix aprimorado por ter menos overhead
+- No arquivo `<NOME_PROJ>.conf`, comentar a linha da porta de proxy reverso e descomentar a do socket, trocando para o nome do projeto
