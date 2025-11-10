@@ -83,3 +83,15 @@
 
 ### Acesso à documentação pelo Redoc
 `localhost:<porta>/redoc`
+
+### Rodando o server na hospedagem Linux
+- Confirmar a instalação do python 3 e pip
+`sudo apt install python3 python3-pip python3-venv`
+- ASGI Server -> uvicorn (instalação)
+`pip install uvicorn[standard]`
+- Rodar na porta 8000
+`python manage.py runserver 0.0.0.0:8000`
+
+### Testes no server DRF
+#### Verificação com curl
+`curl -u <usuario_API>:<senha_usuario_API> http://localhost:8000/`
