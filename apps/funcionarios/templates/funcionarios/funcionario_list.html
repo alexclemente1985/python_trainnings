@@ -5,9 +5,14 @@
     <h1>Lista</h1>
     <ul>
     {% for funcionario in object_list %}
-        <li><a href="{% url 'update_funcionario' funcionario.id %}">{{funcionario}}</a> <a href="{% url 'delete_funcionario' funcionario.id%}">Apagar Funcionário</a></li>
+        <li>
+            <a href="{% url 'update_funcionario' funcionario.id %}">{{funcionario}}</a> 
+            <a href="{% url 'delete_funcionario' funcionario.id%}">Apagar Funcionário</a>
+            
+        </li>
     {% endfor %}
     </ul>
     <a href="{% url 'create_funcionario' %}" class="btn btn-info">Novo</a>
+    <a href="{% url 'pdf_reportlab_funcionario' %}" class="btn btn-info">Gerar PDF reportlab Funcionários</a>
 {% endblock main %}
     

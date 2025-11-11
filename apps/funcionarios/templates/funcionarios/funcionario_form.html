@@ -14,17 +14,39 @@
     
     {% if object and object.documento_set %}
         
-        {% for documento in object.documento_set.all %}
+        <ul>
+            {% for documento in object.documento_set.all %}
             <li>
                 <a href="{{documento.arquivo.url}}">{{documento.descricao}}</a><br>
             </li>
         {% endfor %}
+        </ul>
             
     {% endif %}
-    
+
     {% if object %}
         <a href="{% url 'create_documento' object.id %}" class="btn btn-success">Adicionar Documento</a>
     {% endif %}
+
+    <h2>Banco de Horas</h2>
+    
+    {% if object and object.registrohoraextra_set %}
+        
+        <ul>
+            {% for registro_hora in object.registrohoraextra_set.all %}
+            <li>
+                <a href="{% url 'update_hora_extra' registro_hora.id %}"><span> {{registro_hora.motivo}} | {{registro_hora.horas}}</span></a> <br>
+            </li>
+        {% endfor %}
+        </ul>
+            
+    {% endif %}
+
+    {% if object %}
+     <h2>Total de Horas Extras: {{object.total_horas_extra}}</h2>
+
+     <a href="{% url 'create_registro_hora_extra' %}" class="btn btn-info"> Adicionar Banco de Horas </a>
+    {% endif %}   
         
     
 {% endblock main %}
