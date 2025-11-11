@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block staticcss %}
+    <style>
+        .pdf_container{
+            size: a4;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        @page{
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-clip: content-box;
+            background-image: url('{{background}}');
+            background-size: cover;
+            opacity: 0.3;
+            position: absolute;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+        }
+        .test_h1{
+            color: orange;
+            font-weight: 600;
+        }
+        .test{
+            color: green;
+            font-weight: 500;
+        }
+
+        a{
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: brown;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    </style>
+{% endblock staticcss %}
+    
+    
+
+{% block main %}
+<div class="pdf_container">
+    <div class="background"></div>
+    <h1 class="test_h1">Meu relatório</h1>
+    <h2 class="test">{{sales}}</h2>
+    <a href="{% url 'pdf_xhtml2pdf_funcionario' %}" class="btn btn-info">Gerar PDF xhtml2pdf Funcionários</a>
+</div>
+{% endblock main %}

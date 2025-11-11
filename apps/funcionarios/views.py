@@ -2,10 +2,19 @@ import io
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, UpdateView, DeleteView, CreateView
+from django.views import View
+from django.views.generic import ListView, UpdateView, DeleteView, CreateView, TemplateView
 from .models import Funcionario
 from django.contrib.auth.models import User
+
+#reportlab
 from reportlab.pdfgen import canvas
+
+#xhtml2pdf
+from django.template.loader import get_template
+import xhtml2pdf.pisa as pisa
+
+from pathlib import Path
 
 # Create your views here.
 
@@ -90,3 +99,53 @@ def pdf_reportlab_funcionarios(request):
     response.write(pdf)
 
     return response
+
+class RenderXhtml2pdf:
+    #função que será chamada sempre que precisar gerar o relatório
+    @staticmethod
+    def render(path: str, params:dict, filename:str):
+        template = get_template(path)
+        html = template.render(params)
+        response = io.BytesIO()
+        pdf = pisa.pisaDocument(
+            io.BytesIO(html.encode("UTF-8")),
+            response
+        )
+
+        if not pdf.err:
+            response = HttpResponse(
+                response.getvalue(), 
+                content_type='application/pdf'
+            )
+            response['Content-Disposition'] = 'attachment; filename="%s.pdf"'%filename
+            return response
+        else:
+            return HttpResponse("Error rendering PDF", status=400)
+
+# para ser chamada na tela e gerar o pdf xhtml2pdf
+class Xhtml2pdf(View):
+    def get(self, request):
+        # Necessário mandar url completa para achar -> alterar para porta Nginx no server
+        params = {
+            'sales': 'Variavel sales',
+            'background': 'http://localhost:8000/media/documentos/carina-nebula.png', 
+            'request': request
+        }
+
+        return RenderXhtml2pdf.render('funcionarios/relatorio.html', params, 'xhtml2pdf_report')
+    
+
+# Para realizar debugs
+class Xhtml2pdfDebug(TemplateView):
+    template_name = 'funcionarios/relatorio_debug.html'
+    print(Path.joinpath( Path.cwd().parents[1],'/static/media/documentos/carina-nebula.png'))
+    
+    def get(self, request):
+        params = {
+            'sales': 'Variavel sales',
+            'background': '/media/documentos/carina-nebula.png',
+            
+        }
+      #  return render(request,'funcionarios/relatorio_debug.html',params)
+
+        return RenderXhtml2pdf.render('funcionarios/relatorio_debug.html', params, 'xhtml2pdf_report')

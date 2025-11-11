@@ -1,0 +1,53 @@
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Watermarks example</title>
+<style type="text/css">
+@page  {
+	size: a4;
+	background-image: url('http://localhost:8000/media/documentos/carina-nebula.png');
+    background-position-x: left;
+    background-position-y: top;
+	
+	background-height: 100%;
+	background-width: 100%;
+    background-opacity: 0.3;
+
+    @frame content_frame {
+            left: 50pt;
+            width: 512pt;
+            top: 50pt;
+            height: 692pt;
+            -pdf-frame-border: 1;    /* for debugging the layout */
+    }
+}
+/* Se atentar à porta usada no server (porta de recebimento no Nginx) */
+@page pg1 {
+	size: a4;
+	background-image: url('http://localhost:8000/media/documentos/Foto_1.png'); 
+	
+}
+@page pg2 {
+	size: a4;
+	background-image: url('http://localhost:8000/media/documentos/Modal.png');
+	background-page-step: 2;
+	background-opacity: 0.5;
+	
+}
+</style>
+</head>
+<body>
+<body>
+
+    <h1>Resume Page</h1>
+    <p>This is a resume page with in a4 pagesize.</p>
+
+
+    <pdf:nextpage name="pg1" />
+    <h1>Title Page</h1>
+   <p> This is a title page with a large 5cm margin.</p>
+   <p> Warning: Your pdf need to have transparent page.</p>
+    <pdf:nextpage name="pg2" />
+    <h1>Chapter 1</h1>
+    <p>This is a regular page with a regular 2cm margin.</p>
+
+</body>
