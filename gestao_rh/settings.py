@@ -28,7 +28,9 @@ INSTALLED_APPS = [
     'apps.documentos.apps.DocumentosConfig',
     'apps.registro_hora_extra.apps.RegistroHoraExtraConfig',
     'apps.core.apps.CoreConfig',
-    'bootstrapform'
+    'bootstrapform',
+    'rest_framework',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
