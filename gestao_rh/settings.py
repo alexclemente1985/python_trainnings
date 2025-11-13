@@ -30,7 +30,8 @@ INSTALLED_APPS = [
     'apps.core.apps.CoreConfig',
     'bootstrapform',
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'apps.app_antiga.apps.AppAntigaConfig'
 ]
 
 MIDDLEWARE = [
@@ -70,6 +71,18 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    'antigo':{
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'dbantigo.sqlite3',
+    },
+    'mysql':{
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'db_gestao_rh',
+        'USER':'user_gestao_rh',
+        'PASSWORD':'teste123',
+        'HOST':'localhost',
+        'PORT': '3306'
     }
 }
 
@@ -127,3 +140,5 @@ LOGOUT_REDIRECT_URL = "login"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DATABASE_ROUTERS = ['gestao_rh.DBRoutes.DBRoutes']

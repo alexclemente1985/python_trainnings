@@ -155,88 +155,127 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 4. Executar o comando para rodar o projeto no uwsgi:
 - `uwsgi --http :8000 --module <NOME_PROJETO>.wsgi`
 
-#### Django, uWSGI e NGnix
+#### Django, gunicorn e NGnix
 - Webserver para conexão do browser com o uWSGI
 1. Instalar o NGnix no server
 - `sudo apt-get install nginx`
-2. Criar o arquivo uwsgi_params dentro da pasta do projeto criado (neste caso, gestao_rh), no server (usar nano ou vim), e colar o seguinte conteúdo:
-```
-
-uwsgi_param  QUERY_STRING       $query_string;
-uwsgi_param  REQUEST_METHOD     $request_method;
-uwsgi_param  CONTENT_TYPE       $content_type;
-uwsgi_param  CONTENT_LENGTH     $content_length;
-
-uwsgi_param  REQUEST_URI        $request_uri;
-uwsgi_param  PATH_INFO          $document_uri;
-uwsgi_param  DOCUMENT_ROOT      $document_root;
-uwsgi_param  SERVER_PROTOCOL    $server_protocol;
-uwsgi_param  REQUEST_SCHEME     $scheme;
-uwsgi_param  HTTPS              $https if_not_empty;
-
-uwsgi_param  REMOTE_ADDR        $remote_addr;
-uwsgi_param  REMOTE_PORT        $remote_port;
-uwsgi_param  SERVER_PORT        $server_port;
-uwsgi_param  SERVER_NAME        $server_name;
-```
+2. Com a venv ativa, instalar e testar o gunicorn
+- `pip install gunicorn`
+- `gunicorn --bind 0.0.0.0:<PORTA> <PROJETO>.wsgi:application`
 
 3. Ir na pasta do nginx `sites-available` e criar o arquivo `<nome_projeto>.conf`
 - `cd /etc/nginx/sites-available/`
 
 4. Salvar o seguinte conteúdo no arquivo de configuração (mudar caminhos de media, static e include do location para o caminho da pasta do projeto django -> executar comando `pwd` no interior da pasta e copiar caminho)
-
+- **NOTA:** Configuração abaixo não contempla execução do gunicorn via systemctl
 ```
-# the upstream component nginx needs to connect to
-upstream django {
-    #server unix:///home/ubuntu/gestao_rh/mysite.sock; # for a file socket
-    server 127.0.0.1:8001; # for a web port socket (we'll use this first)
-}
-
-# configuration of the server
 server {
-    # the port your site will be served on
-    listen      8000;
-    # the domain name it will serve for
-    server_name [IP DO SERVER]; # substitute your machine's IP address or FQDN
-    charset     utf-8;
+        listen <PORTA QUE DESEJA ABRIR>;
+        server_name localhost; # Your domain or IP
+        client_max_body_size 100M;
 
-    # max upload size
-    client_max_body_size 75M;   # adjust to taste
+        location = /favicon.ico { access_log off; log_not_found off; }
+        location /static/ {
+            root /PASTA/QUE/CONTEM/PASTA/DE/ARQUIVOS/ESTÁTICOS;; # Your project directory
+        }
 
-    # Django media
-    location /media  {
-        alias /CAMINHO/DO/PROJETO/DJANGO/media;  # your Django project's media files - amend as required
-    }
+        location /media/ {
+            root /PASTA/QUE/CONTEM/PASTA/DE/ARQUIVOS/DE/MEDIA;
+        }
 
-    location /static {
-        alias /CAMINHO/DO/PROJETO/DJANGO/static; # your Django project's static files - amend as required
-    }
-
-    # Finally, send all non-media requests to the Django server.
-    location / {
-        uwsgi_pass  django;
-        include     /CAMINHO/DO/PROJETO/DJANGO/uwsgi_params; # the uwsgi_params file you installed
-    }
-}
+        
+        location / {
+            include proxy_params;
+            proxy_pass http://localhost:<PORTA QUE DESEJA RODAR O PROJETO>;
+           # proxy_pass http://unix:/run/gunicorn.sock;
+        }
 ```
 
-5. Criar link simbólico para o arquivo `.conf`, dentro da pasta `sites-enabled` de `/etc/nginx`
-- `sudo ln -s /etc/nginx/sites-available/<NOME_PROJETO>.conf`
+5. Criar link simbólico para o arquivo dentro da pasta `sites-enabled` de `/etc/nginx`
+- `sudo ln -s /etc/nginx/sites-available/<NOME DO ARQUIVO DO PROJETO SEM EXTENSÃO> /etc/nginx/sites-enabled/`
 
 6. Verificar se o link simbólico foi criado executando o seguinte comando na pasta `sites-enabled` (verificar aparecimento do nome do arquivo na cor azulada ou em outra que não seja vermelha):
-- `ls -la`
+- `ls -la /etc/nginx/sites-enabled/`
 
-7. Adicionar a configuração do STATIC_ROOT para ao projeto, caso não tenha ainda feito
+7. Testar o Nginx e reiniciar se tudo estiver ok:
+- `sudo nginx -t`
+- `sudo nginx -s reload `
+
+8. Adicionar a configuração do STATIC_ROOT para ao projeto, caso não tenha ainda feito
 ```
 STATIC_ROOT = os.path.join(BASE_DIR, 'static') 
 ```
 
-8. Executar o comando para coleta de arquivos estáticos na pasta da aplicação
+9. Executar o comando para coleta de arquivos estáticos na pasta da aplicação
 - `python3 manage.py collectstatic`
 
-9. Reiniciar o NGnix no server
-- `sudo /etc/init.d/nginx restart`
+10. Inicializar o gunicorn na pasta do projeto
+- `gunicorn --bind 0.0.0.0:<PORTA> <PROJETO>.wsgi:application`
 
-10. Usando Unix Sockets
-- Torna o acesso do Ngnix aprimorado por ter menos overhead
-- No arquivo `<NOME_PROJ>.conf`, comentar a linha da porta de proxy reverso e descomentar a do socket, trocando para o nome do projeto
+#### Django Rest Framework e Autenticação de apps clientes
+- Caso esteja usando o módulo `authtoken`, deve-se realizar um `migrate` após sua instalação em `settings.py`, e depois gerar um token para o usuário da aplicação no painel admin do django
+- Usar o token criado na aplicação cliente, no Header `Authorization` com valor `Token <TOKEN GERADO>`
+
+#### Múltiplos bancos de dados
+1. Adicionar as configurações do banco no arquivo `settings.py`
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    '<OUTRO_BANCO>':{
+        'ENGINE': '<ENGINE.DO.BANCO>',
+        'NAME': BASE_DIR / '<NOME DO BANCO>.<EXTENSÃO>',
+    }
+}
+``` 
+2. Criar a aplicação do projeto que irá acessar o banco
+- `python3 manage.py startapp <NOVA_APLICAÇÃO_BANCO>`
+
+3. Inserir a nova aplicação em `INSTALLED_APPS` de `settings.py`
+
+3. Criar os modelos desejados para a aplicação, registrar no admin e realizar `python3 manage.py makemigrations`
+
+4. Criar arquivo `DBRoutes.py` dentro da pasta do projeto, e criar a seguinte classe:
+
+```
+class DBRoutes:
+
+    def db_for_read(self, model, **hints):
+        if model._meta.app_label == '<NOVA_APLICAÇÃO_BANCO>':
+            return '<OUTRO_BANCO>'
+        return None
+    
+    def db_for_write(self, model, **hints):
+        if model._meta.app_label == '<NOVA_APLICAÇÃO_BANCO>':
+            return '<OUTRO_BANCO>'
+        return None
+    
+    def allow_relation(self, obj1, obj2, **hints):
+        if obj1._meta.app_label == '<NOVA_APLICAÇÃO_BANCO>' or \
+           obj2._meta.app_label == '<NOVA_APLICAÇÃO_BANCO>':
+           return True
+        return None
+    
+    def allow_migrate(self, db, app_label, mmodel_name=None, **hints):
+        if app_label == '<NOVA_APLICAÇÃO_BANCO>':
+            return db == '<OUTRO_BANCO>'
+        return None
+    
+```
+5. Inserir em `settings.py` o seguinte trecho:
+```
+DATABASE_ROUTERS = ['<PASTA_PROJETO>.DBRoutes.DBRoutes']
+```
+
+6. Executar comando `python3 manage.py migrate --database=<OUTRO_BANCO>`
+
+**NOTA:** Para cada banco de dados deve-se criar um arquivo "DBRoutes" diferente (boa prática) e inserir em `DATABASE_ROUTERS` no `settings.py`
+
+
+7. Para acessar os dados do outro banco, de maneira manual
+`MODEL.objects.using('<OUTRO_BANCO>').<COMANDO>`
+- Para o caso de alterações em instâncias de Models
+`MODEL.objects.save(using='<BANCO>')` 
+`MODEL.objects.delete(using='<OUTRO_BANCO>')`
